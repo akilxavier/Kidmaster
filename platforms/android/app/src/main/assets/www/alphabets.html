@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alphabet Sound Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to right, #e1f5fe, #b3e5fc);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .container {
+      
+      width: 100%;
+     
+      
+      padding-top: 50%;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #0277bd;
+      margin-bottom: 2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+      gap: 15px;
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 2rem;
+
+    }
+
+    .letter {
+      background: #fff;
+      color: #0277bd;
+      font-size: 1.8rem;
+      font-weight: bold;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .letter:hover {
+      background: #81d4fa;
+      transform: translateY(-3px);
+    }
+
+    .image-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      transition: opacity 0.5s ease;
+      margin-top: 1rem;
+    }
+
+    .image-container.show {
+      display: flex;
+    }
+
+    .image-container img {
+      width: 150px;
+      height: 150px;
+      /* object-fit: contain; */
+      border-radius: 12px;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .word {
+      font-size: 1.5rem;
+      color: #01579b;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .letter {
+        font-size: 1.4rem;
+        padding: 0.8rem;
+      }
+
+      .image-container img {
+        width: 120px;
+        height: 120px;
+      }
+
+      .word {
+        font-size: 1.2rem;
+      }
+    }
+
+    .back-button {
+      position: absolute;
+      top: 80px;
+      left: 20px;
+      text-decoration: none;
+      color: #0277bd;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .popup-content {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .popup-content img {
+      width: 160px;
+      height: 160px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .popup-word {
+      font-size: 1.5rem;
+      color: #0277bd;
+      font-weight: bold;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="index.html" class="back-button"><img src="images/previous.png" height="40px" width="40px" alt=""></a>
+  <div class="container">
+    <h1>Alphabet Sound Game</h1>
+
+    <div class="grid" id="letterGrid"></div>
+
+  </div>
+
+  <div id="popupOverlay" class="popup-overlay">
+    <div class="popup-content">
+      <img id="popupImage" src="" alt="Object Image" />
+      <div id="popupWord" class="popup-word"></div>
+    </div>
+  </div>
+
+
+  <script>
+    const alphabetData = {
+      A: { sound: 'sounds/A.mp3', image: 'images/fruits/apple.png', word: 'Apple' },
+      B: { sound: 'sounds/B.mp3', image: 'images/ball.png', word: 'Ball' },
+      C: { sound: 'sounds/C.mp3', image: 'images/Animals/cat.png', word: 'Cat' },
+      D: { sound: 'sounds/D.mp3', image: 'images/Animals/dog.png', word: 'Dog' },
+      E: { sound: 'sounds/E.mp3', image: 'images/Animals/elephant.jpeg', word: 'Elephant' },
+      F: { sound: 'sounds/F.mp3', image: 'images/fish.png', word: 'Fish' },
+      G: { sound: 'sounds/G.mp3', image: 'images/Animals/goat.jpg', word: 'Goat' },
+      H: { sound: 'sounds/H.mp3', image: 'images/hat.jpg', word: 'Hat' },
+      I: { sound: 'sounds/I.mp3', image: 'images/ice cream.jpg', word: 'Ice Cream' },
+      J: { sound: 'sounds/J.mp3', image: 'images/jug.jpg', word: 'Jug' },
+      K: { sound: 'sounds/K.mp3', image: 'images/kite.jpg', word: 'Kite' },
+      L: { sound: 'sounds/L.mp3', image: 'images/Animals/lion.png', word: 'Lion' },
+      M: { sound: 'sounds/M.mp3', image: 'images/Animals/monkey.jpeg', word: 'Monkey' },
+      N: { sound: 'sounds/N.mp3', image: 'images/nest.jpg', word: 'Nest' },
+      O: { sound: 'sounds/O.mp3', image: 'images/birds/owl.png', word: 'Owl' },
+      P: { sound: 'sounds/P.mp3', image: 'images/birds/parrot.png', word: 'Parrot' },
+      Q: { sound: 'sounds/Q.mp3', image: 'images/queen.png', word: 'Queen' },
+      R: { sound: 'sounds/R.mp3', image: 'images/Animals/rabbit.jpg', word: 'Rabbit' },
+      S: { sound: 'sounds/S.mp3', image: 'images/sun.jpg', word: 'Sun' },
+      T: { sound: 'sounds/T.mp3', image: 'images/Animals/tiger.PNG', word: 'Tiger' },
+      U: { sound: 'sounds/U.mp3', image: 'images/umbrella.jpg', word: 'Umbrella' },
+      V: { sound: 'sounds/V.mp3', image: 'images/van.PNG', word: 'Van' },
+      W: { sound: 'sounds/W.mp3', image: 'images/watch.PNG', word: 'Watch' },
+      X: { sound: 'sounds/X.mp3', image: 'images/xylophone.PNG', word: 'Xylophone' },
+      Y: { sound: 'sounds/Y.mp3', image: 'images/Animals/yak.PNG', word: 'Yak' },
+      Z: { sound: 'sounds/Z.mp3', image: 'images/Animals/zebra.PNG', word: 'Zebra' }
+    };
+
+    const letterGrid = document.getElementById('letterGrid');
+    const popupOverlay = document.getElementById('popupOverlay');
+    const popupImage = document.getElementById('popupImage');
+    const popupWord = document.getElementById('popupWord');
+
+    Object.keys(alphabetData).forEach(letter => {
+      const btn = document.createElement('div');
+      btn.className = 'letter';
+      btn.textContent = letter;
+      btn.onclick = () => {
+        const data = alphabetData[letter];
+
+        // Play sound
+        const audio = new Audio(data.sound);
+        audio.play().catch(e => console.error("Sound error:", e));
+
+        // Show popup
+        popupImage.src = data.image;
+        popupWord.textContent = data.word;
+        popupOverlay.style.display = 'flex';
+
+        // Hide popup after 2 seconds
+        setTimeout(() => {
+          popupOverlay.style.display = 'none';
+        }, 2000);
+      };
+
+      letterGrid.appendChild(btn);
+    });
+
+  </script>
+</body>
+
+</html>

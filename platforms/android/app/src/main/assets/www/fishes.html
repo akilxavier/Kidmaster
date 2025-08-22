@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fish Spelling Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(to right, #e545f7, #9628eb);
+            min-height: 100vh;
+            padding-top: 100px;
+        }
+
+        h1 {
+            color: #8cfff2;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px #fff;
+            text-align: center;
+        }
+
+        .spelling-button {
+            background: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .spelling-button img {
+            width: 100%;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 0.5rem;
+        }
+
+        .spelling-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            z-index: 1050;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="index.html" class="back-button">
+        <img src="images/previous.png" height="40px" width="40px" alt="Back">
+    </a>
+
+    <div class="container">
+        <h1>Fishes Alphabet</h1>
+        <div class="row g-4">
+
+            <!-- Fish Buttons -->
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('jellyfish')">
+                    <img src="images/fishes/jellyfish.png" alt="jellyfish" />Jellyfish
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('starfish')">
+                    <img src="images/fishes/Starfish.png" alt="Starfish" />Starfish
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('prawn')">
+                    <img src="images/fishes/prawn.png" alt="prawn" />Prawn
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('seahorse')">
+                    <img src="images/fishes/seahorse.png" alt="seahorse" />Seahorse
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('crab')">
+                    <img src="images/fishes/Crab.png" alt="Crab" />Crab
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('shark')">
+                    <img src="images/fishes/Shark.png" alt="Shark" />Shark
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('dolphine')">
+                    <img src="images/fishes/Dolphine.png" alt="Dolphine" />Dolphine
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('skater')">
+                    <img src="images/fishes/Skater.png" alt="Skater" />Skater
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('Sardine')">
+                    <img src="images/fishes/Sardine.png" alt="Sardine" />Sardine
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('vanjaram')">
+                    <img src="images/fishes/Vanjaram.png" alt="Vanjaram" />Vanjaram
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('lobster')">
+                    <img src="images/fishes/Lobster.png" alt="Lobster" />Lobster
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('octopus')">
+                    <img src="images/fishes/Octopus.png" alt="Octopus" />Octopus
+                </button>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3">
+                <button class="spelling-button w-100" onclick="playSpelling('tuna')">
+                    <img src="images/fishes/Tuna.png" alt="Tuna" />Tuna
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Spelling Popup Modal -->
+    <div id="spellingPopup"
+        style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index:1000;">
+        <div class="bg-white p-4 rounded text-center position-relative" style="max-width: 90%;">
+            <img id="popupImage" src="" style="width:120px;height:120px;object-fit:contain;margin-bottom:1rem;" />
+            <div id="popupLetters" style="font-size:2rem; color:#333; letter-spacing:2px; margin-bottom:1rem;"></div>
+            <button onclick="closePopup()" class="btn btn-danger rounded-circle position-absolute"
+                style="top:10px; right:10px; width:30px; height:30px; padding: 0;">×</button>
+        </div>
+    </div>
+
+    <script>
+        let spellingAudio = null;
+
+        function playSpelling(fish) {
+            const popup = document.getElementById('spellingPopup');
+            const popupImg = document.getElementById('popupImage');
+            const popupLetters = document.getElementById('popupLetters');
+            const audioQueue = [...fish.split('').map(l => `sounds1/${l}.mp3`), `sounds1/${fish}.mp3`];
+
+            let index = 0;
+            popup.style.display = 'flex';
+            popupImg.src = `images/fishes/${fish}.png`;
+            popupLetters.textContent = '';
+
+            function playNextWithDelay() {
+                if (index >= audioQueue.length) {
+                    spellingAudio = null;
+                    closePopup();
+                    return;
+                }
+
+                const audio = new Audio(audioQueue[index]);
+                spellingAudio = audio;
+
+                if (index < fish.length) {
+                    popupLetters.textContent += fish[index].toUpperCase();
+                } else {
+                    popupLetters.textContent = fish.toUpperCase();
+                }
+
+                audio.play();
+                audio.onended = () => {
+                    index++;
+                    setTimeout(playNextWithDelay, 300);
+                };
+            }
+
+            if (spellingAudio) {
+                spellingAudio.pause();
+                spellingAudio.currentTime = 0;
+            }
+
+            playNextWithDelay();
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('spellingPopup');
+            const popupLetters = document.getElementById('popupLetters');
+
+            if (spellingAudio) {
+                spellingAudio.pause();
+                spellingAudio.currentTime = 0;
+                spellingAudio = null;
+            }
+
+            popup.style.display = 'none';
+            popupLetters.textContent = '';
+        }
+    </script>
+</body>
+
+</html>

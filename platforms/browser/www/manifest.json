@@ -1,0 +1,12 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "Bubbles",
+  "short_name": "Bubbles",
+  "version": "com.ejsgroup.app",
+  "description": "Sample Apache Cordova App",
+  "author": "Apache Cordova Team",
+  "icons": [],
+  "orientation": "portrait",
+  "start_url": "index.html"
+}

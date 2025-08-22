@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bird Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to right, #e3f2fd, #bbdefb);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      padding-top: 100px;
+    }
+
+    h1 {
+      color: #1565c0;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      text-shadow: 1px 1px #fff;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .switch-toggle {
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.2rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 70px;
+      height: 36px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "▶";
+      font-size: 14px;
+      color: black;
+      text-align: center;
+      line-height: 28px;
+      height: 28px;
+      width: 28px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    input:checked + .slider {
+      background-color: #4caf50;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(34px) rotate(180deg);
+    }
+
+    .button-grid, .spelling-grid {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .animal-button, .spelling-button {
+      background: #fff;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.25s ease;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      font-size: 1.1rem;
+    }
+
+    .animal-button:hover, .spelling-button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .animal-button img, .spelling-button img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 0.5rem;
+    }
+
+    .animal-name {
+      font-weight: bold;
+      color: #000000;
+      z-index: 1;
+      position: relative;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      text-decoration: none;
+    }
+
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .animal-button img, .spelling-button img {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="index.html" class="back-button"><img src="images/previous.png" height="40px" width="40px" alt=""></a>
+
+  <h1 id="heading">Bird Sound Game</h1>
+
+  <div class="switch-toggle">
+    <span>Sound</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="modeSwitch" onchange="toggleMode()">
+      <span class="slider"></span>
+    </label>
+    <span>Spelling</span>
+  </div>
+
+  <div class="button-grid" id="soundMode">
+    <div class="animal-button" onclick="playSound('parrot')">
+      <img src="images/Birds/parrot.png" alt="Parrot" />
+      <div class="animal-name">Parrot</div>
+    </div>
+    <div class="animal-button" onclick="playSound('crow')">
+      <img src="images/Birds/crow.png" alt="Crow" />
+      <div class="animal-name">Crow</div>
+    </div>
+    <div class="animal-button" onclick="playSound('sparrow')">
+      <img src="images/Birds/sparrow.png" alt="Sparrow" />
+      <div class="animal-name">Sparrow</div>
+    </div>
+    <div class="animal-button" onclick="playSound('owl')">
+      <img src="images/Birds/owl.png" alt="Owl" />
+      <div class="animal-name">Owl</div>
+    </div>
+    <div class="animal-button" onclick="playSound('peacock')">
+      <img src="images/Birds/peacock.png" alt="Peacock" />
+      <div class="animal-name">Peacock</div>
+    </div>
+    <div class="animal-button" onclick="playSound('pigeon')">
+      <img src="images/Birds/pigeon.png" alt="Pigeon" />
+      <div class="animal-name">Pigeon</div>
+    </div>
+    <div class="animal-button" onclick="playSound('hen')">
+      <img src="images/Birds/hen.png" alt="Hen" />
+      <div class="animal-name">Hen</div>
+    </div>
+    <div class="animal-button" onclick="playSound('woodpecker')">
+      <img src="images/Birds/woodpecker.png" alt="Woodpecker" />
+      <div class="animal-name">Woodpecker</div>
+    </div>
+  </div>
+
+  <div class="spelling-grid" id="spellingMode">
+    <button class="spelling-button" onclick="playSpelling('parrot')"><img src="images/Birds/parrot.png" alt="Parrot" />Parrot</button>
+    <button class="spelling-button" onclick="playSpelling('crow')"><img src="images/Birds/crow.png" alt="Crow" />Crow</button>
+    <button class="spelling-button" onclick="playSpelling('sparrow')"><img src="images/Birds/sparrow.png" alt="Sparrow" />Sparrow</button>
+    <button class="spelling-button" onclick="playSpelling('owl')"><img src="images/Birds/owl.png" alt="Owl" />Owl</button>
+    <button class="spelling-button" onclick="playSpelling('peacock')"><img src="images/Birds/peacock.png" alt="Peacock" />Peacock</button>
+    <button class="spelling-button" onclick="playSpelling('pigeon')"><img src="images/Birds/pigeon.png" alt="Pigeon" />Pigeon</button>
+    <button class="spelling-button" onclick="playSpelling('hen')"><img src="images/Birds/hen.png" alt="Hen" />Hen</button>
+    <button class="spelling-button" onclick="playSpelling('woodpecker')"><img src="images/Birds/woodpecker.png" alt="Woodpecker" />Woodpecker</button>
+  </div>
+  <!-- Popup Modal -->
+<div id="spellingPopup" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index:1000;">
+  <div style="background:#fff; padding:2rem; border-radius:20px; text-align:center; max-width:90%; position:relative;">
+    <img id="popupImage" src="" style="width:120px;height:120px;object-fit:contain;margin-bottom:1rem;" />
+    <div id="popupLetters" style="font-size:2rem; color:#333; letter-spacing:1px; margin-bottom:1rem;"></div>
+    <button onclick="closePopup()" style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; border-radius:50%; width:30px; height:30px; font-weight:bold; cursor:pointer;">×</button>
+  </div>
+</div>
+
+
+  <script>
+    const sounds = {
+      parrot: new Audio('sounds1/parrot1.mp3'),
+      crow: new Audio('sounds1/crow1.mp3'),
+      sparrow: new Audio('sounds1/sparrow1.mp3'),
+      owl: new Audio('sounds1/owl1.mp3'),
+      peacock: new Audio('sounds1/peacock1.mp3'),
+      pigeon: new Audio('sounds1/pigeon1.mp3'),
+      hen: new Audio('sounds1/hen1.mp3'),
+      woodpecker: new Audio('sounds1/woodpecker1.mp3')
+    };
+
+    let currentAudio = null;
+    let soundTimeout = null;
+
+function playSound(bird) {
+  const sound = sounds[bird];
+  if (!sound) return;
+
+  // Stop any currently playing sound
+  if (currentAudio && currentAudio !== sound) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    clearTimeout(soundTimeout);
+  }
+
+  currentAudio = sound;
+  currentAudio.currentTime = 0;
+  currentAudio.play().catch(e => console.error("Playback error:", e));
+
+  // Stop the audio after 2 seconds
+  soundTimeout = setTimeout(() => {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+  }, 2000);
+}
+
+
+    function playSpelling(bird) {
+     const letterSounds = {};
+'abcdefghijklmnopqrstuvwxyz'.split('').forEach(letter => {
+  const audio = new Audio(`sounds1/${letter}.mp3`);
+  letterSounds[letter] = audio;
+});
+
+    }
+
+    function toggleMode() {
+      const spellingMode = document.getElementById('spellingMode');
+      const soundMode = document.getElementById('soundMode');
+      const heading = document.getElementById('heading');
+      const isSpelling = document.getElementById('modeSwitch').checked;
+
+      spellingMode.style.display = isSpelling ? 'grid' : 'none';
+      soundMode.style.display = isSpelling ? 'none' : 'grid';
+      heading.innerText = isSpelling ? 'Bird Spelling Game' : 'Bird Sound Game';
+    }
+
+    window.onload = () => {
+      toggleMode();
+      Object.values(sounds).forEach(sound => sound.load());
+    };
+
+    let spellingAudio = null;
+
+function playSpelling(bird) {
+  const popup = document.getElementById('spellingPopup');
+  const popupImg = document.getElementById('popupImage');
+  const popupLetters = document.getElementById('popupLetters');
+  const audioQueue = [...bird.split('').map(l => `sounds1/${l}.mp3`), `sounds1/${bird}.mp3`];
+
+  let index = 0;
+  popup.style.display = 'flex';
+  popupImg.src = `images/Birds/${bird}.png`;
+  popupLetters.textContent = '';
+
+  function playNextWithDelay() {
+    if (index >= audioQueue.length) {
+      spellingAudio = null;
+      return;
+    }
+
+    const audio = new Audio(audioQueue[index]);
+    spellingAudio = audio;
+
+    // Update popup letter display (skip full name audio)
+    if (index < bird.length) {
+      popupLetters.textContent += bird[index].toUpperCase();
+    } else {
+      popupLetters.textContent = bird.toUpperCase();
+    }
+
+    audio.play();
+    audio.onended = () => {
+      index++;
+      setTimeout(playNextWithDelay, 500);
+    };
+  }
+
+  // Stop currently playing audio if needed
+  if (spellingAudio) {
+    spellingAudio.pause();
+    spellingAudio.currentTime = 0;
+  }
+
+  playNextWithDelay();
+}
+
+function closePopup() {
+  const popup = document.getElementById('spellingPopup');
+  popup.style.display = 'none';
+
+  // Stop current spelling audio
+  if (spellingAudio) {
+    spellingAudio.pause();
+    spellingAudio.currentTime = 0;
+    spellingAudio = null;
+  }
+
+  // Optional: cancel any delayed spelling sequence
+  if (typeof spellingTimeout !== 'undefined') {
+    clearTimeout(spellingTimeout);
+  }
+}
+
+  </script>
+</body>
+
+</html>
