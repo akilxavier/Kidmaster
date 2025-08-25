@@ -1,0 +1,230 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+ body {
+    background-image: url('../Images/beach.jpg');
+    background-size: 100% 100%;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+
+.container {
+    text-align: center;
+}
+
+#playButton {
+    padding: 0px 0px;
+    font-size: 0px;
+    background: #09c1ff;
+    color: rgb(134, 115, 255);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+#playButton:hover {
+    transform: scale(1.1);
+}
+
+.buttons-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 5px;
+    margin-top: 30px;
+    display: none;
+    /* Hidden initially */
+}
+
+.letter-button {
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-position 0.5s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.letter-button:hover {
+    transform: translateY(-5px);
+}
+
+/* CSS Gradient Animations */
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Animation for the clicked letter */
+@keyframes growAndShake {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    25% {
+        transform: scale(1.5) rotate(10deg);
+    }
+
+    50% {
+        transform: scale(1.7) rotate(-10deg);
+    }
+
+    75% {
+        transform: scale(1.5) rotate(5deg);
+    }
+
+    100% {
+        transform: scale(1.6) rotate(0deg);
+    }
+}
+
+/* Cracker effects around the clicked letter */
+@keyframes crackerEffect {
+    0% {
+        opacity: 1;
+        transform: scale(0);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.5);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(2);
+    }
+}
+
+.cracker {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: gold;
+    border-radius: 50%;
+    animation: crackerEffect 0.8s ease-out forwards;
+}
+
+/* Media query for tablets (768px to 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .buttons-container {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns on tablet screens */
+    }
+
+    .letter-button {
+        padding: 12px;
+        font-size: 18px;
+    }
+
+    #playButton {
+        padding: 10px;
+        font-size: 12px; /* Adjust the font size of the play button */
+    }
+}
+
+/* Mobile query for smaller devices (up to 768px) */
+@media (max-width: 768px) {
+    .buttons-container {
+        grid-template-columns: repeat(6, 1fr); /* 6 columns on smaller screens */
+    }
+
+    .letter-button {
+        padding: 10px;
+        font-size: 16px; /* Adjust font size for small screens */
+    }
+}
+
+/* Very small screens (up to 480px) */
+@media (max-width: 480px) {
+    .buttons-container {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns for very small screens */
+    }
+
+    .letter-button {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+.nav-button {
+    align-items: center;
+    display: none;
+    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+    border: 0;
+    border-radius: 6px;
+    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: "JetBrains Mono", monospace;
+    height: 50px;
+    width: 50px;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    transition: box-shadow .15s, transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow, transform;
+    font-size: 18px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.nav-button:focus {
+    box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+}
+
+.nav-button:hover {
+    box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+    transform: translateY(-2px);
+}
+
+.nav-button:active {
+    box-shadow: #3c4fe0 0 3px 7px inset;
+    transform: translateY(2px);
+}

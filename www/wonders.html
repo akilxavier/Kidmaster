@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7 Wonders Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to right, #C7FF73, #76FF14);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      padding-top: 100px;
+    }
+
+    h1 {
+      color: #276e06;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-shadow: 1px 1px #000;
+    }
+
+    .spelling-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 25px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .spelling-button {
+      width: 140px;
+      font-family: 'Fredoka', sans-serif;
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #fff;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .spelling-button img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .spelling-button span {
+      background: #ffffff;
+      color: #000;
+      font-size: 1rem;
+      text-align: center;
+      width: 100%;
+      padding: 5px 0;
+    }
+
+    .spelling-button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .back-button {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      text-decoration: none;
+    }
+
+    /* Popup */
+    #wonderPopup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #wonderPopup .popup-box {
+      background: #fff;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 90%;
+      width: 320px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #wonderPopup img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+
+    #popupName {
+      font-size: 1.3rem;
+      color: #333;
+      padding: 1rem;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="index.html" class="back-button"><img src="images/logo/previous.png" height="35px" width="35px" alt=""></a>
+
+  <h1>7 Wonders of the World</h1>
+
+  <!-- Wonders Grid -->
+  <div class="spelling-grid">
+    <button class="spelling-button" onclick="playWonder('Taj Mahal')">
+      <img src="nature/Taj Mahal.png" alt="Taj Mahal" /> <span>Taj Mahal</span>
+    </button>
+    <button class="spelling-button" onclick="playWonder('Great Wall of China')">
+      <img src="nature/Great Wall of China.png" alt="Great Wall of China" /> <span>Great Wall of China</span>
+    </button>
+    <button class="spelling-button" onclick="playWonder('Machu Picchu')">
+      <img src="nature/Machu Picchu.png" alt="Machu Picchu" /> <span>Machu Picchu</span>
+    </button>
+    <button class="spelling-button" onclick="playWonder('Christ the Redeemer')">
+      <img src="nature/Christ the Redeemer.png" alt="Christ the Redeemer" /> <span>Christ the Redeemer</span>
+    </button>
+    <button class="spelling-button" onclick="playWonder('Colosseum')">
+      <img src="nature/Colosseum.png" alt="Colosseum" /> <span>Colosseum</span>
+    </button>
+    <button class="spelling-button" onclick="playWonder('Petra')">
+      <img src="nature/Petra.png" alt="Petra" /> <span>Petra</span>
+    </button>
+    <button class="spelling-button" onclick="playWonder('Chichen Itza')">
+      <img src="nature/Chichen Itza.png" alt="Chichen Itza" /> <span>Chichen Itza</span>
+    </button>
+  </div>
+
+  <!-- Popup Modal -->
+  <div id="wonderPopup">
+    <div class="popup-box">
+      <img id="popupImage" src="" />
+      <div id="popupName"></div>
+      <button class="close-btn" onclick="closePopup()">×</button>
+    </div>
+  </div>
+
+  <script>
+    let wonderAudio = null;
+
+    function playWonder(name) {
+      const popup = document.getElementById('wonderPopup');
+      const popupImg = document.getElementById('popupImage');
+      const popupName = document.getElementById('popupName');
+
+      popup.style.display = 'flex';
+      popupImg.src = `nature/${name}.png`;
+      popupName.textContent = name;
+
+      if (wonderAudio) {
+        wonderAudio.pause();
+        wonderAudio.currentTime = 0;
+      }
+
+      wonderAudio = new Audio(`sounds/wonders/${name}.wav`);
+      wonderAudio.play();
+
+      wonderAudio.onended = () => {
+        closePopup();
+      };
+    }
+
+    function closePopup() {
+      const popup = document.getElementById('wonderPopup');
+      if (wonderAudio) {
+        wonderAudio.pause();
+        wonderAudio.currentTime = 0;
+        wonderAudio = null;
+      }
+      popup.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

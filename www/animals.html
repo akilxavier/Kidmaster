@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animal Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to right, #fff8e1, #ffe0b2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      padding-top: 100px;
+    }
+
+    h1 {
+      color: #1565c0;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-shadow: 1px 1px #fff;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .switch-toggle {
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.2rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 70px;
+      height: 36px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "▶";
+      font-size: 14px;
+      color: black;
+      text-align: center;
+      line-height: 28px;
+      height: 28px;
+      width: 28px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    input:checked+.slider {
+      background-color: #4caf50;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(34px) rotate(180deg);
+    }
+
+    .button-grid,
+    .spelling-grid {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .animal-button,
+    .spelling-button {
+      background: #fff;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.25s ease;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      font-size: 1.1rem;
+    }
+
+    .animal-button:hover,
+    .spelling-button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .animal-button img,
+    .spelling-button img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 0.5rem;
+    }
+
+    .animal-name {
+      font-weight: bold;
+      color: #000000;
+      z-index: 1;
+      position: relative;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      text-decoration: none;
+    }
+
+    /* @media (max-width: 500px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .animal-button img, .spelling-button img {
+        width: 60px;
+        height: 60px;
+      }
+    }
+      @media screen and (orientation: landscape) {
+      body.force-portrait {
+        transform: rotate(90deg);
+        transform-origin: center center;
+        width: 100vh;
+        height: 100vw;
+        overflow-x: hidden;
+      }
+    } */
+  </style>
+</head>
+
+<body>
+  <a href="index.html" class="back-button"><img src="images/logo/previous.png" height="40px" width="40px" alt=""></a>
+
+  <h1 id="heading">Animal Game</h1>
+
+  <div class="switch-toggle">
+    <span>Sound</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="modeSwitch" onchange="toggleMode()">
+      <span class="slider"></span>
+    </label>
+    <span>Spelling</span>
+  </div>
+
+  <!-- Sound Mode Buttons -->
+  <div class="button-grid" id="soundMode">
+    <div class="animal-button" onclick="playSound('lion')">
+      <img src="images/animals/lion.png" alt="Lion" />
+      <div class="animal-name">Lion</div>
+    </div>
+    <div class="animal-button" onclick="playSound('cat')">
+      <img src="images/animals/cat.png" alt="Cat" />
+      <div class="animal-name">Cat</div>
+    </div>
+    <div class="animal-button" onclick="playSound('dog')">
+      <img src="images/animals/dog.png" alt="Dog" />
+      <div class="animal-name">Dog</div>
+    </div>
+    <div class="animal-button" onclick="playSound('monkey')">
+      <img src="images/animals/monkey.png" alt="Monkey" />
+      <div class="animal-name">Monkey</div>
+    </div>
+    <div class="animal-button" onclick="playSound('wolf')">
+      <img src="images/animals/wolf.png" alt="Wolf" />
+      <div class="animal-name">Wolf</div>
+    </div>
+    <div class="animal-button" onclick="playSound('elephant')">
+      <img src="images/animals/elephant.png" alt="Elephant" />
+      <div class="animal-name">Elephant</div>
+    </div>
+    <div class="animal-button" onclick="playSound('bull')">
+      <img src="images/animals/bull.png" alt="Bull" />
+      <div class="animal-name">Bull</div>
+    </div>
+    <div class="animal-button" onclick="playSound('baffalo')">
+      <img src="images/animals/baffalo.png" alt="Baffalo" />
+      <div class="animal-name">Baffalo</div>
+    </div>
+  </div>
+
+  <!-- Spelling Mode Buttons -->
+  <div class="spelling-grid" id="spellingMode">
+    <button class="spelling-button" onclick="playSpelling('lion')"><img src="images/animals/lion.png"
+        alt="Lion" />Lion</button>
+    <button class="spelling-button" onclick="playSpelling('cat')"><img src="images/animals/cat.png"
+        alt="Cat" />Cat</button>
+    <button class="spelling-button" onclick="playSpelling('dog')"><img src="images/animals/dog.png"
+        alt="Dog" />Dog</button>
+    <button class="spelling-button" onclick="playSpelling('monkey')"><img src="images/animals/monkey.png"
+        alt="Monkey" />Monkey</button>
+    <button class="spelling-button" onclick="playSpelling('wolf')"><img src="images/animals/wolf.png"
+        alt="Wolf" />Wolf</button>
+    <button class="spelling-button" onclick="playSpelling('elephant')"><img src="images/animals/elephant.png"
+        alt="Elephant" />Elephant</button>
+    <button class="spelling-button" onclick="playSpelling('bull')"><img src="images/animals/bull.png"
+        alt="Bull" />Bull</button>
+    <button class="spelling-button" onclick="playSpelling('baffalo')"><img src="images/animals/baffalo.png"
+        alt="Baffalo" />Baffalo</button>
+  </div>
+
+  <!-- Popup Modal -->
+  <!-- Popup Modal -->
+  <div id="spellingPopup"
+    style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index:1000;">
+    <div
+      style="background: linear-gradient(135deg, #e1b962, #ffc022); padding:2rem; border-radius:20px; text-align:center; max-width:90%; position:relative; box-shadow:0 8px 20px rgba(0,0,0,0.3);">
+      <img id="popupImage" src=""
+        style="width:120px;height:120px;object-fit:contain;margin-bottom:1rem; border:3px solid #fff; border-radius:50%; background:#e6faff;" />
+      <div id="popupLetters"
+        style="font-size:2rem; color:#fff; letter-spacing:4px; margin-bottom:1rem; font-weight:bold; text-shadow:1px 1px 3px #000;">
+      </div>
+      <button onclick="closePopup()"
+        style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; border-radius:50%; width:30px; height:30px; font-weight:bold; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.3);">×</button>
+    </div>
+  </div>
+
+
+
+  <script>
+    const sounds = {
+      lion: new Audio('sounds/animals sound/lion.mp3'),
+      cat: new Audio('sounds/animals sound/cat.mp3'),
+      dog: new Audio('sounds/animals sound/dog.mp3'),
+      monkey: new Audio('sounds/animals sound/monkey.mp3'),
+      wolf: new Audio('sounds/animals sound/wolf.mp3'),
+      elephant: new Audio('sounds/animals sound/elephant.mp3'),
+      bull: new Audio('sounds/animals sound/bull.mp3'),
+      baffalo: new Audio('sounds/animals sound/baffalo.mp3'),
+    };
+
+    let currentAudio = null;
+    let spellingAudio = null;
+
+    function playSound(animal) {
+      const sound = sounds[animal];
+      if (!sound) return;
+
+      // Stop previous sound
+      if (currentAudio && currentAudio !== sound) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        clearTimeout(soundTimeout);
+      }
+
+      currentAudio = sound;
+      currentAudio.currentTime = 0;
+      currentAudio.play().catch(e => console.error("Playback error:", e));
+
+      // Stop after 2 seconds
+      soundTimeout = setTimeout(() => {
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+        }
+      }, 2500); // 2500 ms = 2.5 seconds
+    }
+
+
+    function playSpelling(animal) {
+      const popup = document.getElementById('spellingPopup');
+      const popupImg = document.getElementById('popupImage');
+      const popupLetters = document.getElementById('popupLetters');
+      const audioQueue = [...animal.split('').map(l => `sounds/letter sound/${l}.mp3`), `sounds/animals sound/${animal}1.mp3`];
+
+
+      let index = 0;
+      popup.style.display = 'flex';
+      popupImg.src = `images/animals/${animal}.png`;
+      popupLetters.textContent = '';
+
+      function playNextWithDelay() {
+        if (index >= audioQueue.length) {
+          spellingAudio = null;
+          closePopup();
+          return;
+        }
+
+        const audio = new Audio(audioQueue[index]);
+        spellingAudio = audio;
+
+        // Show current letter or full name
+        if (index < animal.length) {
+          popupLetters.textContent += animal[index].toUpperCase();
+        } else {
+          popupLetters.textContent = animal.toUpperCase(); // full word
+        }
+
+        audio.play();
+        audio.onended = () => {
+          index++;
+          setTimeout(playNextWithDelay, 400);
+        };
+      }
+
+      // Stop existing audio if needed
+      if (spellingAudio) {
+        spellingAudio.pause();
+        spellingAudio.currentTime = 0;
+      }
+
+      playNextWithDelay();
+    }
+
+    function closePopup() {
+      const popup = document.getElementById('spellingPopup');
+      popup.style.display = 'none';
+      if (spellingAudio) {
+        spellingAudio.pause();
+        spellingAudio.currentTime = 0;
+        spellingAudio = null;
+      }
+      clearTimeout(soundTimeout);
+    }
+
+
+    function toggleMode() {
+      const spellingMode = document.getElementById('spellingMode');
+      const soundMode = document.getElementById('soundMode');
+      const isSpelling = document.getElementById('modeSwitch').checked;
+      const heading = document.getElementById('heading');
+
+      spellingMode.style.display = isSpelling ? 'grid' : 'none';
+      soundMode.style.display = isSpelling ? 'none' : 'grid';
+      heading.innerText = isSpelling ? 'Animal Spelling Game' : 'Animal Sound Game';
+    }
+
+    window.onload = () => {
+      toggleMode();
+      Object.values(sounds).forEach(sound => sound.load());
+    };
+    // async function lockToPortrait() {
+    //   if (screen.orientation && screen.orientation.lock) {
+    //     try {
+    //       await screen.orientation.lock("portrait");
+    //       console.log("Orientation locked to portrait");
+    //     } catch (err) {
+    //       console.warn("Could not lock orientation:", err);
+    //       // Fallback: use CSS rotation
+    //       document.body.classList.add("force-portrait");
+    //     }
+    //   } else {
+    //     // Fallback for browsers without API
+    //     document.body.classList.add("force-portrait");
+    //   }
+    // }
+
+    // // Run on load
+    // lockToPortrait();
+
+    // // Re-check on resize (if user rotates device)
+    // window.addEventListener("resize", () => {
+    //   lockToPortrait();
+    // });
+  </script>
+
+</body>
+
+</html>

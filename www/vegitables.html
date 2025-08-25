@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fruit Spelling Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to right, #45f7e8, #06bdd5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      padding-top: 100px;
+    }
+
+    h1 {
+      color: #00796b;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-shadow: 1px 1px #fff;
+    }
+
+    .spelling-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .spelling-button {
+      background: #fff;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.25s ease;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .spelling-button img {
+      width: 100%;
+      height: 120px;
+      /* adjust height as you like */
+      object-fit: contain;
+      /* keeps image ratio without stretching */
+      margin-bottom: 0.5rem;
+    }
+
+
+    .spelling-button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .back-button {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="index.html" class="back-button"><img src="images/logo/previous.png" height="40px" width="40px" alt=""></a>
+
+  <h1>Vegitables Alphabet</h1>
+
+  <!-- Spelling Mode -->
+  <div class="spelling-grid">
+    <button class="spelling-button" onclick="playSpelling('carrot')">
+      <img src="images/vegitables/carrot.png" alt="Carrot" />Carrot
+    </button>
+    <button class="spelling-button" onclick="playSpelling('potato')">
+      <img src="images/vegitables/potato.png" alt="Potato" />Potato
+    </button>
+    <button class="spelling-button" onclick="playSpelling('tomato')">
+      <img src="images/vegitables/tomato.png" alt="Tomato" />Tomato
+    </button>
+    <button class="spelling-button" onclick="playSpelling('onion')">
+      <img src="images/vegitables/onion.png" alt="Onion" />Onion
+    </button>
+    <button class="spelling-button" onclick="playSpelling('cabbage')">
+      <img src="images/vegitables/cabbage.png" alt="Cabbage" />Cabbage
+    </button>
+    <button class="spelling-button" onclick="playSpelling('cauliflower')">
+      <img src="images/vegitables/cauliflower.png" alt="Cauliflower" />Cauliflower
+    </button>
+    <button class="spelling-button" onclick="playSpelling('brinjal')">
+      <img src="images/vegitables/brinjal.png" alt="Brinjal" />Brinjal
+    </button>
+    <button class="spelling-button" onclick="playSpelling('capsicum')">
+      <img src="images/vegitables/capsicum.png" alt="Capsicum" />Capsicum
+    </button>
+    <button class="spelling-button" onclick="playSpelling('cucumber')">
+      <img src="images/vegitables/cucumber.png" alt="Cucumber" />Cucumber
+    </button>
+    <button class="spelling-button" onclick="playSpelling('pumpkin')">
+      <img src="images/vegitables/pumpkin.png" alt="Pumpkin" />Pumpkin
+    </button>
+    <button class="spelling-button" onclick="playSpelling('radish')">
+      <img src="images/vegitables/radish.png" alt="Radish" />Radish
+    </button>
+    <button class="spelling-button" onclick="playSpelling('beetroot')">
+      <img src="images/vegitables/beetroot.png" alt="Beetroot" />Beetroot
+    </button>
+    <button class="spelling-button" onclick="playSpelling('spinach')">
+      <img src="images/vegitables/spinach.png" alt="Spinach" />Spinach
+    </button>
+    <button class="spelling-button" onclick="playSpelling('peas')">
+      <img src="images/vegitables/peas.png" alt="Peas" />Peas
+    </button>
+    <button class="spelling-button" onclick="playSpelling('bittergourd')">
+      <img src="images/vegitables/bittergourd.png" alt="Bitter Gourd" />Bitter Gourd
+    </button>
+    <button class="spelling-button" onclick="playSpelling('ladiesfinger')">
+      <img src="images/vegitables/ladiesfinger.png" alt="Ladies Finger" />Ladies Finger
+    </button>
+    <button class="spelling-button" onclick="playSpelling('mushroom')">
+      <img src="images/vegitables/mushroom.png" alt="Mushroom" />Mushroom
+    </button>
+    <button class="spelling-button" onclick="playSpelling('broccoli')">
+      <img src="images/vegitables/broccoli.png" alt="Broccoli" />Broccoli
+    </button>
+    <button class="spelling-button" onclick="playSpelling('ginger')">
+      <img src="images/vegitables/ginger.png" alt="Ginger" />Ginger
+    </button>
+    <button class="spelling-button" onclick="playSpelling('garlic')">
+      <img src="images/vegitables/garlic.png" alt="Garlic" />Garlic
+    </button>
+  </div>
+
+
+
+  <!-- Popup Modal -->
+  <!-- Popup Modal -->
+  <div id="spellingPopup"
+    style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index:1000;">
+    <div
+      style="background: linear-gradient(135deg, #25ffff, #11b9ec); padding:2rem; border-radius:20px; text-align:center; max-width:90%; position:relative; box-shadow:0 8px 20px rgba(0,0,0,0.3);">
+      <img id="popupImage" src=""
+        style="width:120px;height:120px;object-fit:contain;margin-bottom:1rem; border:3px solid #fff; border-radius:50%; background:#e6faff;" />
+      <div id="popupLetters"
+        style="font-size:2rem; color:#fff; letter-spacing:4px; margin-bottom:1rem; font-weight:bold; text-shadow:1px 1px 3px #000;">
+      </div>
+      <button onclick="closePopup()"
+        style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; border-radius:50%; width:30px; height:30px; font-weight:bold; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.3);">×</button>
+    </div>
+  </div>
+
+
+  <script>
+    let spellingAudio = null;
+
+    function playSpelling(fruit) {
+      const popup = document.getElementById('spellingPopup');
+      const popupImg = document.getElementById('popupImage');
+      const popupLetters = document.getElementById('popupLetters');
+      const audioQueue = [...fruit.split('').map(l => `sounds/letter sound/${l}.mp3`), `sounds/vegitables name/${fruit}.mp3`];
+
+      let index = 0;
+      popup.style.display = 'flex';
+      popupImg.src = `images/vegitables/${fruit}.png`;
+      popupLetters.textContent = '';
+
+      function playNextWithDelay() {
+        if (index >= audioQueue.length) {
+          spellingAudio = null;
+          closePopup(); // ✅ close automatically after spelling finishes
+          return;
+        }
+
+        const audio = new Audio(audioQueue[index]);
+        spellingAudio = audio;
+
+        if (index < fruit.length) {
+          popupLetters.textContent += fruit[index].toUpperCase();
+        } else {
+          popupLetters.textContent = fruit.toUpperCase();
+        }
+
+        audio.play();
+        audio.onended = () => {
+          index++;
+          setTimeout(playNextWithDelay, 200);
+        };
+      }
+
+      if (spellingAudio) {
+        spellingAudio.pause();
+        spellingAudio.currentTime = 0;
+      }
+
+      playNextWithDelay();
+    }
+
+
+
+
+    function closePopup() {
+      const popup = document.getElementById('spellingPopup');
+      const popupLetters = document.getElementById('popupLetters');
+
+      // stop and reset audio
+      if (spellingAudio) {
+        spellingAudio.pause();
+        spellingAudio.currentTime = 0;
+        spellingAudio = null;
+      }
+
+      // hide popup and clear text
+      popup.style.display = 'none';
+      popupLetters.textContent = '';
+    }
+
+
+  </script>
+</body>
+
+</html>

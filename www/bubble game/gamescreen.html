@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabet Bubbles</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/gamescreen.css">
+    
+    
+  
+</head>
+
+<body>
+   
+
+    <img src="Images/Capture.jpg" width="100%" height="100%" alt="">
+    
+    <i class="fa fa-heart lifeline1"></i>
+    <i class="fa fa-heart lifeline2"></i>
+    <i class="fa fa-heart lifeline3"></i>
+    <h1 id="h1">Score: <span id="countDisplay">0</span></h1>
+    
+
+    <audio id="popSound" src="Sounds/pop.mp3"></audio>
+    <audio id="click" src="Sounds/menu.mp3"></audio>
+    <audio id="wrong1" src="Sounds/wrong.mp3"></audio>
+    <audio id="wrong2" src="Sounds/wrong2.mp3"></audio>
+
+    <div class="container">
+        
+        <div class="waves">
+            <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                <defs>
+                    <path id="gentle-wave"
+                        d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                </defs>
+                <g class="parallax">
+                    <use xlink:href="#gentle-wave" x="48" y="0" fill="#1a91e4" />
+                    <use xlink:href="#gentle-wave" x="48" y="3" fill="#198ce1" />
+                    <use xlink:href="#gentle-wave" x="48" y="5" fill="#1987de" />
+                    <use xlink:href="#gentle-wave" x="48" y="7" fill="#1b81db" />
+                    <use xlink:href="#gentle-wave" x="48" y="9" fill="#1e7cd8" />
+                    <use xlink:href="#gentle-wave" x="48" y="11" fill="#1f78d7" />
+                    <use xlink:href="#gentle-wave" x="48" y="13" fill="#2174d6" />
+                    <use xlink:href="#gentle-wave" x="48" y="15" fill="#2470d5" />
+                    <use xlink:href="#gentle-wave" x="48" y="17" fill="#276cd6" />
+                    <use xlink:href="#gentle-wave" x="48" y="19" fill="#2b68d7" />
+                    <use xlink:href="#gentle-wave" x="48" y="21" fill="#3064d7" />
+                    <use xlink:href="#gentle-wave" x="48" y="23" fill="#3660d7" />
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <div class="card" id="card">
+        <div class="neon-text" id="neonText"></div>
+    </div>
+    <div class="navigation-buttons">
+        <button class="nav-button" id="homeButton"> <img src="Images/home.png" width="50px" alt="Icon"></button>
+       
+
+        <button class="nav-button" id="nextButton" onclick="next()"> <img src="Images/next.png" width="50px" alt="Icon">
+        </button>
+    </div>
+    <div id="bubbleContainer"></div>
+    <script src="js/gamescreen.js">
+       document.addEventListener('deviceready', function () {
+  // Option A: allow any rotation (portrait or landscape)
+  if (screen.orientation && screen.orientation.unlock) {
+    screen.orientation.unlock();
+  } else if (screen.unlockOrientation) {
+    screen.unlockOrientation(); // legacy API
+  }
+
+  // Option B (if you want *landscape-only*):
+  // screen.orientation.lock('landscape').catch(console.warn);
+}, false);
+
+// When leaving Bubble, re-lock portrait so rest of app stays upright
+window.addEventListener('beforeunload', function () {
+  if (screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock('portrait').catch(()=>{});
+  } else if (screen.lockOrientation) {
+    screen.lockOrientation('portrait');
+  }
+});
+
+        
+    </script>
+</body>
+
+</html>

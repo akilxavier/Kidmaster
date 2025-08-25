@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tic Tac Toe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    h1 {
+      color: #d84315;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 15px;
+      margin: 1rem 0;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      font-size: 2.5rem;
+      font-weight: bold;
+      background-color: #ff7043;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      color: white;
+    }
+
+    .cell.X { color: #1565C0; }
+    .cell.O { color: #2E7D32; }
+
+    .cell:hover {
+      background-color: #f4511e;
+    }
+
+    .status {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #444;
+    }
+
+    .reset-btn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: 0.3s ease;
+    }
+
+    .reset-btn:hover {
+      background: #388e3c;
+    }
+
+        .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      text-decoration: none;
+    }
+
+   
+    /* Popup Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    .modal-content h2 {
+      color: #d84315;
+      margin-bottom: 1rem;
+    }
+
+    .modal-content button {
+      background: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background: #f4511e;
+    }
+
+    /* @media (max-width: 500px) {
+      .board {
+        grid-template-columns: repeat(3, 80px);
+        gap: 10px;
+      }
+
+      .cell {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+        .back-buttodn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      text-decoration: none;
+      }
+        @media screen and (orientation: landscape) {
+      body.force-portrait {
+        transform: rotate(90deg);
+        transform-origin: center center;
+        width: 100vh;
+        height: 100vw;
+        overflow-x: hidden;
+      }
+    } */
+  </style>
+</head>
+<body>
+ <a href="index.html" class="back-button"><img src="images/logo/previous.png" height="40px" width="40px" alt=""></a>
+  <h1>Tic Tac Toe</h1>
+  <div class="status" id="status">Player X's turn</div>
+  <div class="board" id="board">
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+  </div>
+  <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+
+  <!-- 🎉 Win Modal -->
+  <div class="modal" id="popup">
+    <div class="modal-content">
+      <h2 id="popup-message">Player X wins!</h2>
+      <button onclick="resetGame()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const cells = document.querySelectorAll('.cell');
+    const statusText = document.getElementById('status');
+    const popup = document.getElementById('popup');
+    const popupMessage = document.getElementById('popup-message');
+    let currentPlayer = 'X';
+    let gameActive = true;
+
+    const winCombos = [
+      [0,1,2], [3,4,5], [6,7,8],
+      [0,3,6], [1,4,7], [2,5,8],
+      [0,4,8], [2,4,6]
+    ];
+
+    function checkWin() {
+      return winCombos.some(combo => {
+        return combo.every(index => cells[index].textContent === currentPlayer);
+      });
+    }
+
+    function checkDraw() {
+      return [...cells].every(cell => cell.textContent !== '');
+    }
+
+    function showPopup(message) {
+      popupMessage.textContent = message;
+      popup.style.display = 'flex';
+    }
+
+    function handleClick(e) {
+      const cell = e.target;
+      if (cell.textContent !== '' || !gameActive) return;
+
+      cell.textContent = currentPlayer;
+      cell.classList.add(currentPlayer);
+
+      if (checkWin()) {
+        statusText.textContent = `🎉 Player ${currentPlayer} wins!`;
+        showPopup(`🎉 Player ${currentPlayer} wins!`);
+        gameActive = false;
+      } else if (checkDraw()) {
+        statusText.textContent = "It's a draw!";
+        showPopup("It's a draw!");
+        gameActive = false;
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        statusText.textContent = `Player ${currentPlayer}'s turn`;
+      }
+    }
+
+    function resetGame() {
+      cells.forEach(cell => {
+        cell.textContent = '';
+        cell.classList.remove('X', 'O');
+      });
+      currentPlayer = 'X';
+      gameActive = true;
+      statusText.textContent = `Player ${currentPlayer}'s turn`;
+      popup.style.display = 'none';
+    }
+
+    cells.forEach(cell => cell.addEventListener('click', handleClick));
+
+     
+  </script>
+</body>
+</html>

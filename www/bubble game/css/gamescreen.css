@@ -1,0 +1,425 @@
+/* Existing styles */
+body {
+  background-image: url('Images/beach.jpg');
+  background-size: 100% 100%;
+  background-size: cover;
+  position: static;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  /* Ensure the body covers the full viewport */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  /* Default background gradient */
+}
+
+
+.card {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(177.5deg, rgba(255, 200, 42, 1) 28.3%, rgba(202, 32, 132, 1) 79.8%);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  animation: appearAndMove 3s ease-in-out forwards;
+  position: absolute;
+  top: 60%;
+  /* Start from the center */
+  left: 80%;
+  transform: translate(-50%, -50%);
+}
+
+.neon-text {
+  font-size: 6rem;
+  font-weight: bold;
+  color: hsl(112, 78%, 53%);
+  text-shadow: 0 0 5px #e42828, 0 0 10px #e42828, 0 0 20px #e42828;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes appearAndMove {
+  0% {
+    transform: scale(1.5) translate(-50%, -50%);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1) translate(-50%, -50%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.6) translate(-50%, 0%);
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 5px #e42828, 0 0 10px #e42828, 0 0 20px #e42828;
+  }
+
+  100% {
+    text-shadow: 0 0 10px #e42828, 0 0 20px #e42828, 0 0 40px #e42828;
+  }
+}
+
+/* Bubble container positioned at top */
+#bubbleContainer {
+  position: fixed;
+  top: 22%;
+  left: 10%;
+  width: 90%;
+  height: 60%;
+
+  overflow: hidden;
+  /* border-bottom: 5px solid #333; */
+  z-index: 5;
+}
+
+.bubble {
+  position: absolute;
+  background: linear-gradient(45deg, #e27474, #fffc61, #7bff7b, #61c7ff);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #e428de;
+  font-size: 3rem;
+  font-weight: bold;
+  width: 8vw;
+  /* Adjusted size to better fit on mobile */
+  height: 8vw;
+  /* Adjusted size to better fit on mobile */
+  animation: fadeIn 1s ease-in-out, float 3s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Adjust wave positioning to the bottom */
+.waves {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 25vh;
+  min-height: 100px;
+  max-height: 150px;
+}
+
+/* Animation  wave*/
+.parallax>use {
+  animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+}
+
+.parallax>use:nth-child(1) {
+  animation-delay: -2s;
+  animation-duration: 7s;
+}
+
+.parallax>use:nth-child(2) {
+  animation-delay: -3s;
+  animation-duration: 10s;
+}
+
+.parallax>use:nth-child(3) {
+  animation-delay: -4s;
+  animation-duration: 13s;
+}
+
+.parallax>use:nth-child(4) {
+  animation-delay: -5s;
+  animation-duration: 20s;
+}
+
+@keyframes move-forever {
+  0% {
+    transform: translate3d(-90px, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(85px, 0, 0);
+  }
+}
+
+/* Adjusted for mobile responsiveness */
+@media (max-width: 768px) {
+  .waves {
+    height: 30vh;
+    /* Increased wave height for better mobile visibility */
+    min-height: 20px;
+  }
+
+  .card {
+    width: 10%;
+    height: 130px;
+   
+    /* Adjusted for smaller screens */
+  }
+
+  .neon-text {
+    font-size: 9rem;
+    /* Slightly smaller text on mobile */
+  }
+
+  .bubble {
+    width: 12vw;
+    height: 12vw;
+  }
+}
+
+.firework {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgb(255, 254, 0) 0%, rgba(255, 0, 0, 0.5) 70%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: fireworks 1s forwards;
+}
+
+@keyframes fireworks {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.bubble.wrong {
+  animation: moveDown 2s ease-in-out forwards;
+}
+
+@keyframes moveDown {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+}
+
+.bubble.blast {
+  animation: blast 0.5s forwards;
+}
+
+@keyframes blast {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(2);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.navigation-buttons {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 10%;
+  /* display: flex; */
+  /* justify-content: space-between; */
+  padding: 19px;
+  box-sizing: border-box;
+  height: 100%;
+
+}
+
+.nav-button {
+  align-items: center;
+  appearance: none;
+  background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+  border: 0;
+  border-radius: 6px;
+  box-shadow: rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, rgba(58, 65, 111, .5) 0 -3px 0 inset;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "JetBrains Mono", monospace;
+  height: 70px;
+  width: 70px;
+  justify-content: center;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transition: box-shadow .15s, transform .15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow, transform;
+  font-size: 18px;
+  
+}
+
+#nextButton{
+    /* margin-top: 390px; */
+    top: 60%;
+
+}
+.nav-button:focus {
+  box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+}
+
+.nav-button:hover {
+  box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+.nav-button:active {
+  box-shadow: #3c4fe0 0 3px 7px inset;
+  transform: translateY(2px);
+}
+
+.lifeline1 {
+  font-size: 48px;
+  color: red;
+  position: absolute;
+  top: 25px;
+  bottom: 10 0px;
+  left: 100px;
+}
+
+.lifeline2 {
+  font-size: 48px;
+  color: red;
+  position: absolute;
+  top: 25px;
+  bottom: 10 0px;
+  left: 160px;
+}
+
+.lifeline3 {
+  font-size: 48px;
+  color: red;
+  position: absolute;
+  top: 25px;
+  bottom: 10 0px;
+  left: 220px;
+}
+#h1{
+  margin-left: 300px;
+  position: absolute;
+}
+
+/* Media Queries for Tablets */
+@media (max-width: 1024px) {
+  .card {
+    width: 28%; /* Slightly smaller cards for tablet screens */
+    height: 230px; /* Slightly bigger height for better visual balance */
+  }
+
+  .neon-text {
+    font-size: 6.5rem; /* Slightly smaller neon text */
+  }
+
+  .bubble {
+    width: 8vw; /* Adjust bubble size for tablet */
+    height: 8vw; /* Adjust bubble size for tablet */
+  }
+
+  .waves {
+    height: 25vh; /* Slightly larger wave height */
+  }
+
+  .navigation-buttons {
+    padding: 15px; /* Add more padding for better appearance */
+  }
+
+  .nav-button {
+    height: 55px; /* Adjust size for better visibility */
+    width: 55px;
+    font-size: 20px; /* Slightly bigger text */
+  }
+
+  .lifeline1, .lifeline2, .lifeline3 {
+    font-size: 40px; /* Adjust lifeline font size */
+  }
+}
+
+/* Media Queries for smaller tablets (landscape and portrait) */
+@media (max-width: 768px) {
+  .card {
+    width: 40%; /* Slightly bigger for smaller tablets */
+    height: 180px;
+  }
+
+  .neon-text {
+    font-size: 5.5rem; /* Adjust for smaller tablets */
+  }
+
+  .bubble {
+    width: 12vw; /* Adjust bubble size */
+    height: 12vw; /* Adjust bubble size */
+  }
+
+  .waves {
+    height: 30vh; /* Adjust wave height */
+  }
+
+  .navigation-buttons {
+    padding: 20px; /* Add more padding for mobile screens */
+  }
+
+  .nav-button {
+    height: 70px; /* Bigger buttons */
+    width: 70px;
+    font-size: 24px; /* Bigger font size */
+  }
+
+  .lifeline1, .lifeline2, .lifeline3 {
+    font-size: 45px; /* Adjust lifeline font size */
+  }
+
+}
+

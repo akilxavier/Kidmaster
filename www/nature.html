@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nature Spelling Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to right, #38bdf8, #3b82f6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      padding-top: 100px;
+    }
+
+    h1 {
+      color: #fffacd;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      text-shadow: 1px 1px #000;
+    }
+
+    .spelling-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 25px;
+      width: 100%;
+      max-width: 850px;
+    }
+
+    .spelling-button {
+      font-family: 'Fredoka', sans-serif;
+      width: 140px;
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .spelling-button img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .spelling-button span {
+      background: #f1f5f9;
+      color: #000;
+      font-size: 1rem;
+      text-align: center;
+      width: 100%;
+      padding: 6px 0;
+    }
+
+    .spelling-button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    .back-button {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      text-decoration: none;
+    }
+
+    /* Popup */
+    #spellingPopup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #spellingPopup .popup-box {
+      width: 80%;
+      max-width: 300px;
+      height: 250px;
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    #spellingPopup img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px;
+      display: block;
+    }
+
+    #popupLetters {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-size: 1.6rem;
+      padding: 8px;
+      text-align: center;
+    }
+
+    #spellingPopup button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="index.html" class="back-button"><img src="images/logo/previous.png" height="40px" width="40px" alt=""></a>
+
+  <h1>Nature Features</h1>
+
+  <div class="spelling-grid">
+    <button class="spelling-button" onclick="playSpelling('river')">
+      <img src="nature/river.jpg" alt="River" /> <span>River</span>
+    </button>
+    <button class="spelling-button" onclick="playSpelling('mountain')">
+      <img src="nature/mountain.jpg" alt="Mountain" /> <span>Mountain</span>
+    </button>
+    <button class="spelling-button" onclick="playSpelling('forest')">
+      <img src="nature/forest.jpg" alt="Forest" /> <span>Forest</span>
+    </button>
+    <button class="spelling-button" onclick="playSpelling('sea')">
+      <img src="nature/sea.jpg" alt="Sea" /><span>Sea</span>
+    </button>
+    <button class="spelling-button" onclick="playSpelling('lake')">
+      <img src="nature/lake.jpg" alt="Lake" /><span>Lake</span>
+    </button>
+    <button class="spelling-button" onclick="playSpelling('island')">
+      <img src="nature/island.jpg" alt="Island" /><span>Island</span>
+    </button>
+    <button class="spelling-button" onclick="playSpelling('desert')">
+      <img src="nature/desert.jpg" alt="Desert" /><span>Desert</span>
+    </button>
+    <button class="spelling-button" onclick="playSpelling('volcano')">
+      <img src="nature/volcano.jpg" alt="Volcano" /><span>Volcano</span>
+    </button>
+  </div>
+
+  <!-- Popup -->
+  <div id="spellingPopup">
+    <div class="popup-box">
+      <img id="popupImage" src="" alt="">
+      <div id="popupLetters"></div>
+      <button onclick="closePopup()">×</button>
+    </div>
+  </div>
+
+  <script>
+    let spellingAudio = null;
+
+    function playSpelling(word) {
+      const popup = document.getElementById('spellingPopup');
+      const popupImg = document.getElementById('popupImage');
+      const popupLetters = document.getElementById('popupLetters');
+      const audioQueue = [...word.split('').map(l => `sounds/letter sound/${l}.mp3`), `sounds/nature/${word}.wav`];
+
+      let index = 0;
+      popup.style.display = 'flex';
+      popupImg.src = `nature/${word}.jpg`;
+      popupLetters.textContent = '';
+
+      function playNextWithDelay() {
+        if (index >= audioQueue.length) {
+          spellingAudio = null;
+          closePopup();
+          return;
+        }
+
+        const audio = new Audio(audioQueue[index]);
+        spellingAudio = audio;
+
+        if (index < word.length) {
+          popupLetters.textContent += word[index].toUpperCase();
+        } else {
+          popupLetters.textContent = word.toUpperCase();
+        }
+
+        audio.play();
+        audio.onended = () => {
+          index++;
+          setTimeout(playNextWithDelay, 300);
+        };
+      }
+
+      if (spellingAudio) {
+        spellingAudio.pause();
+        spellingAudio.currentTime = 0;
+      }
+
+      playNextWithDelay();
+    }
+
+    function closePopup() {
+      const popup = document.getElementById('spellingPopup');
+      const popupLetters = document.getElementById('popupLetters');
+
+      if (spellingAudio) {
+        spellingAudio.pause();
+        spellingAudio.currentTime = 0;
+        spellingAudio = null;
+      }
+
+      popup.style.display = 'none';
+      popupLetters.textContent = '';
+    }
+  </script>
+</body>
+</html>
