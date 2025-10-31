@@ -1,12 +1,12 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "Bubbles",
-  "short_name": "Bubbles",
-  "version": "com.ejsgroup.app",
-  "description": "Sample Apache Cordova App",
+  "name": "MyApp",
+  "short_name": "MyApp",
+  "version": "com.example.myapp",
+  "description": "Fun Kids Game",
   "author": "Apache Cordova Team",
   "icons": [],
-  "orientation": "portrait",
+  "orientation": "any",
   "start_url": "index.html"
 }

@@ -6,6 +6,34 @@
   "config_munge": {
     "files": {}
   },
-  "installed_plugins": {},
-  "dependent_plugins": {}
+  "installed_plugins": {
+    "es6-promise-plugin": {
+      "PACKAGE_NAME": "com.example.myapp"
+    },
+    "cordova-plugin-screen-orientation": {
+      "PACKAGE_NAME": "com.example.myapp"
+    }
+  },
+  "dependent_plugins": {},
+  "modules": [
+    {
+      "file": "plugins/es6-promise-plugin/www/promise.js",
+      "id": "es6-promise-plugin.Promise",
+      "pluginId": "es6-promise-plugin",
+      "runs": true
+    },
+    {
+      "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.js",
+      "id": "cordova-plugin-screen-orientation.screenorientation",
+      "pluginId": "cordova-plugin-screen-orientation",
+      "clobbers": [
+        "cordova.plugins.screenorientation",
+        "screen.orientation"
+      ]
+    }
+  ],
+  "plugin_metadata": {
+    "es6-promise-plugin": "4.2.2",
+    "cordova-plugin-screen-orientation": "3.0.4"
+  }
 }

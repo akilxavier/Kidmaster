@@ -1,6 +1,6 @@
 {
-  "name": "Bubbles",
-  "short_name": "Bubbles",
+  "name": "MyApp",
+  "short_name": "MyApp",
   "description": "Description of your app from template",
   "start_url": "index.html",
   "scope": "index.html",

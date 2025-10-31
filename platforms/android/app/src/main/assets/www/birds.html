@@ -1,51 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bird Game</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
+    :root {
+      --bg-light: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      --bg-dark: #1a1a2e;
+      --section-light: rgba(255, 255, 255, 0.85);
+      --section-dark: #16213e;
+      --card-light: #64b5f6;
+      --card-dark: #42a5f5;
+      --hover-bg: #2196f3;
+      --text-light: #333;
+      --text-dark: #f3f3f3;
+      --accent: #1565c0;
+      --primary: #64b5f6;
+      --secondary: #4ecdc4;
+      --tertiary: #ffd166;
+    }
+    
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
       font-family: 'Fredoka', sans-serif;
-      background: linear-gradient(to right, #e3f2fd, #bbdefb);
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: background 0.5s ease, color 0.5s ease;
+      min-height: 100vh;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem;
-      padding-top: 100px;
     }
-
-    h1 {
-      color: #1565c0;
+    
+    body.dark-mode {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    
+    header {
+      background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem 1rem;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      width: 100%;
+      border-bottom: 3px solid var(--accent);
+    }
+    
+    body.dark-mode header {
+      background: linear-gradient(90deg, rgba(30,30,40,0.9) 0%, rgba(30,30,40,0.7) 100%);
+    }
+    
+    header h1 {
       font-size: 2.5rem;
-      margin-bottom: 2rem;
-      text-shadow: 1px 1px #fff;
-      transition: all 0.3s ease-in-out;
+      background: linear-gradient(90deg, var(--accent), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      animation: float 3s ease-in-out infinite;
     }
-
-    .switch-toggle {
-      margin-bottom: 2rem;
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .controls {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .back-button {
+      position: absolute;
+      text-decoration: none;
+      top: 1.5rem;
+      left: 1.5rem;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       font-size: 1.2rem;
+      z-index: 101;
     }
-
+    
+    .back-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+    
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    
+    .section {
+      background: var(--section-light);
+      border-radius: 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      padding: 2.5rem;
+      width: 100%;
+      transition: background 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body.dark-mode .section {
+      background: var(--section-dark);
+    }
+    
+    .section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--tertiary));
+    }
+    
+    .mode-toggle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .mode-label {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    
     .toggle-switch {
       position: relative;
       width: 70px;
       height: 36px;
     }
-
+    
     .toggle-switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
-
+    
     .slider {
       position: absolute;
       cursor: pointer;
@@ -53,11 +181,12 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: #ccc;
-      transition: 0.4s;
-      border-radius: 34px;
+      background: linear-gradient(90deg, #ccc, #ddd);
+      transition: 0.5s;
+      border-radius: 36px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     }
-
+    
     .slider:before {
       position: absolute;
       content: "▶";
@@ -70,279 +199,628 @@
       left: 4px;
       bottom: 4px;
       background-color: white;
-      transition: 0.4s;
+      transition: 0.5s;
       border-radius: 50%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     }
-
+    
     input:checked + .slider {
-      background-color: #4caf50;
+      background: linear-gradient(90deg, #4a4a4a, #666);
     }
-
+    
     input:checked + .slider:before {
       transform: translateX(34px) rotate(180deg);
     }
-
+    
     .button-grid, .spelling-grid {
       display: none;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       gap: 20px;
       width: 100%;
-      max-width: 800px;
     }
-
+    
     .animal-button, .spelling-button {
-      background: #fff;
+      background: linear-gradient(145deg, var(--card-light), var(--primary));
       font-family: 'Fredoka', sans-serif;
       font-weight: bold;
       border: none;
       border-radius: 20px;
-      padding: 1rem;
+      padding: 1.5rem 1rem;
       text-align: center;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-      transition: all 0.25s ease;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      transition: all 0.4s ease;
       position: relative;
       cursor: pointer;
       overflow: hidden;
       font-size: 1.1rem;
+      color: white;
     }
-
-    .animal-button:hover, .spelling-button:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+    
+    body.dark-mode .animal-button, 
+    body.dark-mode .spelling-button {
+      background: linear-gradient(145deg, var(--card-dark), var(--primary));
     }
-
-    .animal-button img, .spelling-button img {
-      width: 70px;
-      height: 70px;
+    
+    .animal-button::before, 
+    .spelling-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+      z-index: 1;
+    }
+    
+    .animal-button:hover, 
+    .spelling-button:hover {
+      background: linear-gradient(145deg, var(--hover-bg), var(--primary));
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      animation: bounce 0.6s ease;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(-5px) scale(1.03); }
+      50% { transform: translateY(-10px) scale(1.05); }
+    }
+    
+    .animal-button img, 
+    .spelling-button img {
+      width: 80px;
+      height: 80px;
       object-fit: cover;
       display: block;
-      margin: 0 auto 0.5rem;
-    }
-
-    .animal-name {
-      font-weight: bold;
-      color: #000000;
-      z-index: 1;
+      margin: 0 auto 0.8rem;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.7);
+      background: white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      z-index: 2;
       position: relative;
     }
-
-    .back-button {
-      position: absolute;
-      top: 60px;
-      left: 20px;
-      text-decoration: none;
+    
+    .animal-button:hover img, 
+    .spelling-button:hover img {
+      transform: rotate(10deg) scale(1.1);
+      border-color: white;
     }
-
-    @media (max-width: 500px) {
-      h1 {
+    
+    .animal-name {
+      font-weight: bold;
+      color: white;
+      z-index: 2;
+      position: relative;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+    
+    /* Toggle Switch Container */
+    .switch-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 70px;
+      height: 36px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider-dark {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, #ccc, #ddd);
+      transition: 0.5s;
+      border-radius: 36px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+    
+    .slider-dark:before {
+      position: absolute;
+      content: "🌞";
+      height: 28px;
+      width: 28px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      border-radius: 50%;
+      font-size: 18px;
+      text-align: center;
+      line-height: 28px;
+      transition: 0.5s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .switch input:checked + .slider-dark {
+      background: linear-gradient(90deg, #4a4a4a, #666);
+    }
+    
+    .switch input:checked + .slider-dark:before {
+      transform: translateX(34px);
+      content: "🌜";
+    }
+    
+    /* Popup Modal */
+    #spellingPopup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+    
+    .popup-content {
+      background: linear-gradient(145deg, var(--section-light), #ffffff);
+      padding: 2rem;
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      animation: popIn 0.5s ease;
+      max-width: 90%;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body.dark-mode .popup-content {
+      background: linear-gradient(145deg, var(--section-dark), #2a2a3e);
+    }
+    
+    .popup-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--tertiary));
+    }
+    
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    #popupImage {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+      border: 5px solid white;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    #popupLetters {
+      font-size: 2.5rem;
+      color: var(--accent);
+      letter-spacing: 4px;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .close-button {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--hover-bg);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .close-button:hover {
+      transform: scale(1.1);
+      background: #0d47a1;
+    }
+    
+    /* Floating particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      animation: float-up 15s infinite linear;
+    }
+    
+    @keyframes float-up {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.4;
+      }
+      90% {
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1.5);
+        opacity: 0;
+      }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header h1 {
         font-size: 2rem;
       }
-      .animal-button img, .spelling-button img {
+      
+      .button-grid, 
+      .spelling-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 15px;
+      }
+      
+      .animal-button img, 
+      .spelling-button img {
+        width: 70px;
+        height: 70px;
+      }
+      
+      #popupImage {
+        width: 120px;
+        height: 120px;
+      }
+      
+      #popupLetters {
+        font-size: 2rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .section {
+        padding: 1.8rem;
+      }
+      
+      .button-grid, 
+      .spelling-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+      }
+      
+      .animal-button img, 
+      .spelling-button img {
         width: 60px;
         height: 60px;
+      }
+      
+      .animal-button, 
+      .spelling-button {
+        padding: 1.2rem 0.8rem;
+      }
+      
+      #popupImage {
+        width: 100px;
+        height: 100px;
+      }
+      
+      #popupLetters {
+        font-size: 1.8rem;
       }
     }
   </style>
 </head>
-
 <body>
-  <a href="index.html" class="back-button"><img src="images/previous.png" height="40px" width="40px" alt=""></a>
-
-  <h1 id="heading">Bird Sound Game</h1>
-
-  <div class="switch-toggle">
-    <span>Sound</span>
-    <label class="toggle-switch">
-      <input type="checkbox" id="modeSwitch" onchange="toggleMode()">
-      <span class="slider"></span>
-    </label>
-    <span>Spelling</span>
-  </div>
-
-  <div class="button-grid" id="soundMode">
-    <div class="animal-button" onclick="playSound('parrot')">
-      <img src="images/Birds/parrot.png" alt="Parrot" />
-      <div class="animal-name">Parrot</div>
+  <!-- Floating particles background -->
+  <div class="particles" id="particles"></div>
+  
+  <header>
+    <a href="index.html" class="back-button">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+    <h1 id="heading">Bird Sound Game</h1>
+    <div class="controls switch-wrapper">
+      <span>Light</span>
+      <label class="switch">
+        <input type="checkbox" id="darkToggle" onchange="toggleDarkMode()">
+        <span class="slider-dark"></span>
+      </label>
+      <span>Dark</span>
     </div>
-    <div class="animal-button" onclick="playSound('crow')">
-      <img src="images/Birds/crow.png" alt="Crow" />
-      <div class="animal-name">Crow</div>
+  </header>
+  
+  <main>
+    <div class="section">
+      <div class="mode-toggle">
+        <span class="mode-label">Sound</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="modeSwitch" onchange="toggleMode()">
+          <span class="slider"></span>
+        </label>
+        <span class="mode-label">Spelling</span>
+      </div>
+      
+      <div class="button-grid" id="soundMode">
+        <div class="animal-button" onclick="playSound('parrot')">
+          <img src="images/birds/parrot.png" alt="Parrot" />
+          <div class="animal-name">Parrot</div>
+        </div>
+        <div class="animal-button" onclick="playSound('crow')">
+          <img src="images/birds/crow.png" alt="Crow" />
+          <div class="animal-name">Crow</div>
+        </div>
+        <div class="animal-button" onclick="playSound('sparrow')">
+          <img src="images/birds/sparrow.png" alt="Sparrow" />
+          <div class="animal-name">Sparrow</div>
+        </div>
+        <div class="animal-button" onclick="playSound('owl')">
+          <img src="images/birds/owl.png" alt="Owl" />
+          <div class="animal-name">Owl</div>
+        </div>
+        <div class="animal-button" onclick="playSound('peacock')">
+          <img src="images/birds/peacock.png" alt="Peacock" />
+          <div class="animal-name">Peacock</div>
+        </div>
+        <div class="animal-button" onclick="playSound('pigeon')">
+          <img src="images/birds/pigeon.png" alt="Pigeon" />
+          <div class="animal-name">Pigeon</div>
+        </div>
+        <div class="animal-button" onclick="playSound('hen')">
+          <img src="images/birds/hen.png" alt="Hen" />
+          <div class="animal-name">Hen</div>
+        </div>
+        <div class="animal-button" onclick="playSound('woodpecker')">
+          <img src="images/birds/woodpecker.png" alt="Woodpecker" />
+          <div class="animal-name">Woodpecker</div>
+        </div>
+      </div>
+      
+      <div class="spelling-grid" id="spellingMode">
+        <button class="spelling-button" onclick="playSpelling('parrot')">
+          <img src="images/birds/parrot.png" alt="Parrot" />Parrot
+        </button>
+        <button class="spelling-button" onclick="playSpelling('crow')">
+          <img src="images/birds/crow.png" alt="Crow" />Crow
+        </button>
+        <button class="spelling-button" onclick="playSpelling('sparrow')">
+          <img src="images/birds/sparrow.png" alt="Sparrow" />Sparrow
+        </button>
+        <button class="spelling-button" onclick="playSpelling('owl')">
+          <img src="images/birds/owl.png" alt="Owl" />Owl
+        </button>
+        <button class="spelling-button" onclick="playSpelling('peacock')">
+          <img src="images/birds/peacock.png" alt="Peacock" />Peacock
+        </button>
+        <button class="spelling-button" onclick="playSpelling('pigeon')">
+          <img src="images/birds/pigeon.png" alt="Pigeon" />Pigeon
+        </button>
+        <button class="spelling-button" onclick="playSpelling('hen')">
+          <img src="images/birds/hen.png" alt="Hen" />Hen
+        </button>
+        <button class="spelling-button" onclick="playSpelling('woodpecker')">
+          <img src="images/birds/woodpecker.png" alt="Woodpecker" />Woodpecker
+        </button>
+      </div>
     </div>
-    <div class="animal-button" onclick="playSound('sparrow')">
-      <img src="images/Birds/sparrow.png" alt="Sparrow" />
-      <div class="animal-name">Sparrow</div>
-    </div>
-    <div class="animal-button" onclick="playSound('owl')">
-      <img src="images/Birds/owl.png" alt="Owl" />
-      <div class="animal-name">Owl</div>
-    </div>
-    <div class="animal-button" onclick="playSound('peacock')">
-      <img src="images/Birds/peacock.png" alt="Peacock" />
-      <div class="animal-name">Peacock</div>
-    </div>
-    <div class="animal-button" onclick="playSound('pigeon')">
-      <img src="images/Birds/pigeon.png" alt="Pigeon" />
-      <div class="animal-name">Pigeon</div>
-    </div>
-    <div class="animal-button" onclick="playSound('hen')">
-      <img src="images/Birds/hen.png" alt="Hen" />
-      <div class="animal-name">Hen</div>
-    </div>
-    <div class="animal-button" onclick="playSound('woodpecker')">
-      <img src="images/Birds/woodpecker.png" alt="Woodpecker" />
-      <div class="animal-name">Woodpecker</div>
-    </div>
-  </div>
-
-  <div class="spelling-grid" id="spellingMode">
-    <button class="spelling-button" onclick="playSpelling('parrot')"><img src="images/Birds/parrot.png" alt="Parrot" />Parrot</button>
-    <button class="spelling-button" onclick="playSpelling('crow')"><img src="images/Birds/crow.png" alt="Crow" />Crow</button>
-    <button class="spelling-button" onclick="playSpelling('sparrow')"><img src="images/Birds/sparrow.png" alt="Sparrow" />Sparrow</button>
-    <button class="spelling-button" onclick="playSpelling('owl')"><img src="images/Birds/owl.png" alt="Owl" />Owl</button>
-    <button class="spelling-button" onclick="playSpelling('peacock')"><img src="images/Birds/peacock.png" alt="Peacock" />Peacock</button>
-    <button class="spelling-button" onclick="playSpelling('pigeon')"><img src="images/Birds/pigeon.png" alt="Pigeon" />Pigeon</button>
-    <button class="spelling-button" onclick="playSpelling('hen')"><img src="images/Birds/hen.png" alt="Hen" />Hen</button>
-    <button class="spelling-button" onclick="playSpelling('woodpecker')"><img src="images/Birds/woodpecker.png" alt="Woodpecker" />Woodpecker</button>
-  </div>
+  </main>
+  
   <!-- Popup Modal -->
-<div id="spellingPopup" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index:1000;">
-  <div style="background:#fff; padding:2rem; border-radius:20px; text-align:center; max-width:90%; position:relative;">
-    <img id="popupImage" src="" style="width:120px;height:120px;object-fit:contain;margin-bottom:1rem;" />
-    <div id="popupLetters" style="font-size:2rem; color:#333; letter-spacing:1px; margin-bottom:1rem;"></div>
-    <button onclick="closePopup()" style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; border-radius:50%; width:30px; height:30px; font-weight:bold; cursor:pointer;">×</button>
+  <div id="spellingPopup">
+    <div class="popup-content">
+      <img id="popupImage" src="" alt="Bird" />
+      <div id="popupLetters"></div>
+      <button class="close-button" onclick="closePopup()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
   </div>
-</div>
-
 
   <script>
     const sounds = {
-      parrot: new Audio('sounds1/parrot1.mp3'),
-      crow: new Audio('sounds1/crow1.mp3'),
-      sparrow: new Audio('sounds1/sparrow1.mp3'),
-      owl: new Audio('sounds1/owl1.mp3'),
-      peacock: new Audio('sounds1/peacock1.mp3'),
-      pigeon: new Audio('sounds1/pigeon1.mp3'),
-      hen: new Audio('sounds1/hen1.mp3'),
-      woodpecker: new Audio('sounds1/woodpecker1.mp3')
+      parrot: new Audio('sounds/birds sound/parrot1.mp3'),
+      crow: new Audio('sounds/birds sound/crow1.mp3'),
+      sparrow: new Audio('sounds/birds sound/sparrow1.mp3'),
+      owl: new Audio('sounds/birds sound/owl1.mp3'),
+      peacock: new Audio('sounds/birds sound/peacock1.mp3'),
+      pigeon: new Audio('sounds/birds sound/pigeon1.mp3'),
+      hen: new Audio('sounds/birds sound/hen1.mp3'),
+      woodpecker: new Audio('sounds/birds sound/woodpecker1.mp3')
     };
-
+    
     let currentAudio = null;
+    let spellingAudio = null;
     let soundTimeout = null;
-
-function playSound(bird) {
-  const sound = sounds[bird];
-  if (!sound) return;
-
-  // Stop any currently playing sound
-  if (currentAudio && currentAudio !== sound) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
-    clearTimeout(soundTimeout);
-  }
-
-  currentAudio = sound;
-  currentAudio.currentTime = 0;
-  currentAudio.play().catch(e => console.error("Playback error:", e));
-
-  // Stop the audio after 2 seconds
-  soundTimeout = setTimeout(() => {
-    if (currentAudio) {
-      currentAudio.pause();
+    
+    function playSound(bird) {
+      const sound = sounds[bird];
+      if (!sound) return;
+      
+      // Stop any currently playing sound
+      if (currentAudio && currentAudio !== sound) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        clearTimeout(soundTimeout);
+      }
+      
+      currentAudio = sound;
       currentAudio.currentTime = 0;
+      currentAudio.play().catch(e => console.error("Playback error:", e));
+      
+      // Stop the audio after 2 seconds
+      soundTimeout = setTimeout(() => {
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+        }
+      }, 2000);
     }
-  }, 2000);
-}
-
 
     function playSpelling(bird) {
-     const letterSounds = {};
-'abcdefghijklmnopqrstuvwxyz'.split('').forEach(letter => {
-  const audio = new Audio(`sounds1/${letter}.mp3`);
-  letterSounds[letter] = audio;
-});
-
+      const popup = document.getElementById('spellingPopup');
+      const popupImg = document.getElementById('popupImage');
+      const popupLetters = document.getElementById('popupLetters');
+      const audioQueue = [...bird.split('').map(l => `sounds/letter sound/${l}.mp3`), `sounds/birds sound/${bird}.mp3`];
+      
+      let index = 0;
+      popup.style.display = 'flex';
+      popupImg.src = `images/birds/${bird}.png`;
+      popupLetters.textContent = '';
+      
+      function playNextWithDelay() {
+        if (index >= audioQueue.length) {
+          spellingAudio = null;
+          closePopup();
+          return;
+        }
+        
+        const audio = new Audio(audioQueue[index]);
+        spellingAudio = audio;
+        
+        // Update popup letter display (skip full name audio)
+        if (index < bird.length) {
+          popupLetters.textContent += bird[index].toUpperCase();
+        } else {
+          popupLetters.textContent = bird.toUpperCase();
+        }
+        
+        audio.play().catch(e => console.error("Playback error:", e));
+        audio.onended = () => {
+          index++;
+          setTimeout(playNextWithDelay, 500);
+        };
+      }
+      
+      // Stop currently playing audio if needed
+      if (spellingAudio) {
+        spellingAudio.pause();
+        spellingAudio.currentTime = 0;
+      }
+      
+      playNextWithDelay();
     }
-
+    
+    function closePopup() {
+      const popup = document.getElementById('spellingPopup');
+      popup.style.display = 'none';
+      
+      // Stop current spelling audio
+      if (spellingAudio) {
+        spellingAudio.pause();
+        spellingAudio.currentTime = 0;
+        spellingAudio = null;
+      }
+      
+      // Cancel any delayed spelling sequence
+      if (soundTimeout) {
+        clearTimeout(soundTimeout);
+      }
+    }
+    
     function toggleMode() {
       const spellingMode = document.getElementById('spellingMode');
       const soundMode = document.getElementById('soundMode');
       const heading = document.getElementById('heading');
       const isSpelling = document.getElementById('modeSwitch').checked;
-
+      
       spellingMode.style.display = isSpelling ? 'grid' : 'none';
       soundMode.style.display = isSpelling ? 'none' : 'grid';
       heading.innerText = isSpelling ? 'Bird Spelling Game' : 'Bird Sound Game';
     }
-
-    window.onload = () => {
+    
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      // Save user preference
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+    
+    // Check for saved dark mode preference
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('darkToggle').checked = true;
+      }
+      
+      // Initialize the game
       toggleMode();
       Object.values(sounds).forEach(sound => sound.load());
-    };
-
-    let spellingAudio = null;
-
-function playSpelling(bird) {
-  const popup = document.getElementById('spellingPopup');
-  const popupImg = document.getElementById('popupImage');
-  const popupLetters = document.getElementById('popupLetters');
-  const audioQueue = [...bird.split('').map(l => `sounds1/${l}.mp3`), `sounds1/${bird}.mp3`];
-
-  let index = 0;
-  popup.style.display = 'flex';
-  popupImg.src = `images/Birds/${bird}.png`;
-  popupLetters.textContent = '';
-
-  function playNextWithDelay() {
-    if (index >= audioQueue.length) {
-      spellingAudio = null;
-      return;
+      
+      // Create floating particles
+      createParticles();
+    });
+    
+    // Create floating particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random size
+        const size = Math.random() * 10 + 5;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Random position
+        const posX = Math.random() * 100;
+        particle.style.left = `${posX}%`;
+        
+        // Random animation delay
+        const delay = Math.random() * 15;
+        particle.style.animationDelay = `${delay}s`;
+        
+        // Random opacity
+        const opacity = Math.random() * 0.5 + 0.1;
+        particle.style.opacity = opacity;
+        
+        particlesContainer.appendChild(particle);
+      }
     }
-
-    const audio = new Audio(audioQueue[index]);
-    spellingAudio = audio;
-
-    // Update popup letter display (skip full name audio)
-    if (index < bird.length) {
-      popupLetters.textContent += bird[index].toUpperCase();
-    } else {
-      popupLetters.textContent = bird.toUpperCase();
-    }
-
-    audio.play();
-    audio.onended = () => {
-      index++;
-      setTimeout(playNextWithDelay, 500);
-    };
-  }
-
-  // Stop currently playing audio if needed
-  if (spellingAudio) {
-    spellingAudio.pause();
-    spellingAudio.currentTime = 0;
-  }
-
-  playNextWithDelay();
-}
-
-function closePopup() {
-  const popup = document.getElementById('spellingPopup');
-  popup.style.display = 'none';
-
-  // Stop current spelling audio
-  if (spellingAudio) {
-    spellingAudio.pause();
-    spellingAudio.currentTime = 0;
-    spellingAudio = null;
-  }
-
-  // Optional: cancel any delayed spelling sequence
-  if (typeof spellingTimeout !== 'undefined') {
-    clearTimeout(spellingTimeout);
-  }
-}
-
+    
+    // Close popup when clicking outside
+    document.getElementById('spellingPopup').addEventListener('click', (e) => {
+      if (e.target.id === 'spellingPopup') {
+        closePopup();
+      }
+    });
   </script>
 </body>
-
 </html>

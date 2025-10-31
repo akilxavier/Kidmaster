@@ -1,17 +1,21 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ejsgroup.app" version="1.0.2" android-versionCode="10002" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Kids Master</name>
-    <description> Kids App</description>
+<widget id="com.example.myapp" version="1.0.0"
+    xmlns="http://www.w3.org/ns/widgets"
+    xmlns:cdv="http://cordova.apache.org/ns/1.0">
+
+    <name>MyApp</name>
+    <description>Fun Kids Game</description>
+
+    <!-- Lock orientation in Cordova -->
+    <preference name="Orientation" value="default" />
+
     <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
         Apache Cordova Team
     </author>
+
     <content src="index.html" />
+
+    <!-- Permissions -->
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-    <preference name="Orientation" value="default"/>
-    <preference name="Fullscreen" value="true"/>
-    <platform name="android">
-    <allow-intent href="market:*"/>
-    </platform>
-    <icon src="www/res/kids-zoner-modified_imresizer.png"/>
 </widget>

@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Snake Alphabet Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Press+Start+2P&family=VT323&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #ff6b6b;
+            --success-color: #51cf66;
+            --dark-bg: #0f0f23;
+            --card-bg: #1a1a2e;
+            --cell-size: 18px;        /* Reduced from 20px */
+            --board-size: 30;
+            --snake-head: #51cf66;
+            --snake-body: #40c057;
+            --food-color: #ff6b6b;
+            --text-light: #f8f9fa;
+            --text-dim: #adb5bd;
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(74, 107, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 107, 107, 0.1) 0%, transparent 20%);
+            touch-action: manipulation;
+        }
+        /* Page Views */
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Index Page Styles */
+        .index-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            width: 100%;
+            max-width: 500px;
+        }
+        .game-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-shadow: 0 0 15px rgba(74, 107, 255, 0.7);
+            margin-bottom: 40px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .form-container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 25px;
+        }
+        .input-group label {
+            display: block;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            text-align: center;
+            transition: var(--transition);
+        }
+        .input-group input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(74, 107, 255, 0.3);
+        }
+        .play-button {
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: var(--primary-color);
+            color: var(--dark-bg);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            width: 100%;
+        }
+        .play-button:hover, .play-button:active {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px rgba(74, 107, 255, 0.4);
+            background-color: #3a5ae8;
+        }
+        .back-button {
+            text-decoration: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 100;
+        }
+        .back-button:hover, .back-button:active {
+            background-color: var(--primary-color);
+            color: var(--dark-bg);
+            transform: scale(1.1);
+        }
+        /* Difficulty Page Styles */
+        .difficulty-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            width: 100%;
+        }
+        .difficulty-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-shadow: 0 0 15px rgba(74, 107, 255, 0.7);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .difficulty-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .difficulty-button {
+            padding: 18px;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-light);
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .difficulty-button:hover, .difficulty-button:active {
+            transform: translateY(-2px);
+            background-color: var(--primary-color);
+            color: var(--dark-bg);
+            box-shadow: 0 12px 20px rgba(74, 107, 255, 0.4);
+        }
+        /* Game Page Styles */
+        .game-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .game-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-bg);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .game-title-small {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(74, 107, 255, 0.5);
+            letter-spacing: 1px;
+        }
+        .game-stats {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .stat-label {
+            font-size: 9px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .game-controls {
+            display: flex;
+            gap: 8px;
+        }
+        .control-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .control-btn:hover, .control-btn:active {
+            background-color: var(--primary-color);
+            color: var(--dark-bg);
+            transform: scale(1.1);
+        }
+        .game-info {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--card-bg);
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .player-info, .next-letter {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-label {
+            font-size: 9px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .info-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 3px;
+        }
+        .player-name {
+            color: var(--primary-color);
+        }
+        .letter-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .next-letter-value {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .game-board-container {
+            position: relative;
+            background-color: var(--card-bg);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            justify-content: center;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(var(--board-size), var(--cell-size));
+            grid-template-rows: repeat(var(--board-size), var(--cell-size));
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(74, 107, 255, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            border-radius: 2px;
+        }
+        .snake-head {
+            background-color: var(--snake-head);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 10px rgba(81, 207, 102, 0.7);
+            z-index: 10;
+        }
+        .snake-head::before, .snake-head::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: white;
+            border-radius: 50%;
+            top: 6px;
+        }
+        .snake-head.right::before { left: 4px; }
+        .snake-head.right::after { right: 4px; }
+        .snake-head.left::before { left: 4px; }
+        .snake-head.left::after { right: 4px; }
+        .snake-head.up::before { left: 4px; top: 4px; }
+        .snake-head.up::after { right: 4px; top: 4px; }
+        .snake-head.down::before { left: 4px; top: 8px; }
+        .snake-head.down::after { right: 4px; top: 8px; }
+        .snake-body {
+            background-color: var(--snake-body);
+            border-radius: 4px;
+        }
+        .snake-tail {
+            background-color: #2f9e44;
+            border-radius: 50%;
+        }
+        .food {
+            background-color: var(--food-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: white;
+            font-size: 10px;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.7);
+            animation: foodPulse 1s infinite;
+        }
+        @keyframes foodPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .keyboard-container {
+            width: 100%;
+            background-color: var(--card-bg);
+            padding: 12px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: 6px;
+            width: 100%;
+        }
+        .key {
+            aspect-ratio: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+            font-size: 16px;
+        }
+        .key:hover, .key:active {
+            background-color: rgba(74, 107, 255, 0.3);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        .key.correct {
+            background-color: rgba(81, 207, 102, 0.3);
+            border-color: var(--success-color);
+            animation: correctKey 0.5s;
+        }
+        @keyframes correctKey {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .game-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(26, 26, 46, 0.95);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .message-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .message-text {
+            font-size: 18px;
+            color: var(--text-light);
+            max-width: 400px;
+        }
+        .message-button {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: var(--dark-bg);
+            border: none;
+            border-radius: 6px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+        }
+        .message-button:hover, .message-button:active {
+            background-color: #3a5ae8;
+            transform: translateY(-2px);
+        }
+        .difficulty-indicator {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .difficulty-easy {
+            background-color: rgba(81, 207, 102, 0.2);
+            color: var(--success-color);
+        }
+        .difficulty-medium {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+        .difficulty-hard {
+            background-color: rgba(255, 107, 107, 0.2);
+            color: var(--secondary-color);
+        }
+        /* Game Over Page Styles */
+        .gameover-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        .gameover-title {
+            font-family: 'VT323', monospace;
+            font-size: 4em;
+            color: lime;
+            text-shadow: 0 0 20px green;
+            margin-bottom: 20px;
+            animation: gameoverPulse 1s infinite;
+        }
+        @keyframes gameoverPulse {
+            0% { color: lime; text-shadow: 0 0 20px green; }
+            25% { color: green; text-shadow: 2px 2px 2px lime; transform: translate(-2px, 1px); }
+            40% { color: lime; text-shadow: none; transform: translate(0, 0); }
+            50% { color: green; text-shadow: 5px 5px 2px blue, -5px -5px 2px red; transform: translate(0px, 5px); }
+            70% { color: lime; text-shadow: none; transform: translate(0, 0); }
+            80% { color: lime; text-shadow: 0 0 20px green; transform: translate(-2px, 1px); }
+            100% { color: lime; text-shadow: none; }
+        }
+        .score-display {
+            font-family: 'UnifrakturCook', cursive;
+            color: #ffd700;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+            font-size: 28px;
+            margin-bottom: 25px;
+        }
+        .leaderboard-container {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            width: 100%;
+        }
+        .leaderboard-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 20px;
+            color: var(--primary-color);
+            text-shadow: 0 0 8px rgba(200, 10, 10, 0.7);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #222;
+            font-family: "Press Start 2P", sans-serif;
+            color: white;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 10px;
+            border: 1px solid #555;
+            text-align: left;
+        }
+        .leaderboard-table th {
+            background: #006b9d;
+            text-shadow: 0 0 8px rgba(200, 10, 10, 0.7);
+        }
+        .clear-button {
+            padding: 10px 20px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+            width: 100%;
+            justify-content: center;
+        }
+        .clear-button:hover, .clear-button:active {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+        .gameover-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            width: 100%;
+        }
+        .gameover-button {
+            padding: 12px 24px;
+            background: var(--primary-color);
+            color: var(--dark-bg);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+        }
+        .gameover-button:hover, .gameover-button:active {
+            background: #3a5ae8;
+            transform: translateY(-2px);
+        }
+        
+        /* Mobile Controls - REMOVED ARROW BUTTONS */
+        .mobile-controls {
+            display: none;
+        }
+        
+       /* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    :root {
+        --cell-size: 14px;        /* Reduced from 16px */
+        --board-size: 28;         /* Increased from 25 */
+    }
+    
+    .keyboard {
+        grid-template-columns: repeat(9, 1fr);  /* More columns */
+        gap: 3px;                /* Reduced gap */
+    }
+    
+    .key {
+        font-size: 12px;         /* Reduced font size */
+    }
+    
+    .game-title {
+        font-size: 28px;
+    }
+    
+    .gameover-title {
+        font-size: 2.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --cell-size: 12px;        /* Reduced from 14px */
+        --board-size: 24;         /* Increased from 20 */
+    }
+    
+    .keyboard {
+        grid-template-columns: repeat(8, 1fr);  /* More columns */
+        gap: 2px;                /* Reduced gap */
+    }
+    
+    .key {
+        font-size: 10px;         /* Reduced font size */
+    }
+    
+    .game-title {
+        font-size: 24px;
+    }
+    
+    .gameover-title {
+        font-size: 2.4em;
+    }
+    
+    .leaderboard-table {
+        font-size: 10px;
+    }
+    
+    .game-container {
+        gap: 6px;
+    }
+    
+    .game-header, .game-info {
+        padding: 6px 10px;
+    }
+    
+    .keyboard-container {
+        padding: 6px;
+    }
+    
+    /* Adjust next letter display for smaller screens */
+    .next-letter-value {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+    
+    /* Adjust stat values for smaller screens */
+    .stat-value {
+        font-size: 12px;
+    }
+    
+    /* Adjust game title for smaller screens */
+    .game-title-small {
+        font-size: 14px;
+    }
+    
+    /* Adjust food letter size */
+    .food {
+        font-size: 8px;
+    }
+    
+    /* Adjust snake head eyes */
+    .snake-head::before, .snake-head::after {
+        width: 3px;
+        height: 3px;
+    }
+    
+    .snake-head.right::before { left: 3px; }
+    .snake-head.right::after { right: 3px; }
+    .snake-head.left::before { left: 3px; }
+    .snake-head.left::after { right: 3px; }
+    .snake-head.up::before { left: 3px; top: 3px; }
+    .snake-head.up::after { right: 3px; top: 3px; }
+    .snake-head.down::before { left: 3px; top: 6px; }
+    .snake-head.down::after { right: 3px; top: 6px; }
+}
+    </style>
+</head>
+<body>
+    <!-- Index Page -->
+    <div id="index-page" class="page active">
+        <a href="index.html" class="back-button">
+      <i class="fa-solid fa-arrow-left"></i>
+    </a>
+        <div class="index-container">
+            <h1 class="game-title">SNAKE ALPHABET</h1>
+            <div class="form-container">
+                <div class="input-group">
+                    <label for="player-name">Enter Your Name</label>
+                    <input type="text" id="player-name" placeholder="Your name here" required>
+                </div>
+                <button class="play-button" onclick="startGame()">Play</button>
+            </div>
+        </div>
+    </div>
+    <!-- Difficulty Selection Page -->
+    <div id="difficulty-page" class="page">
+        <div class="difficulty-container">
+            <h2 class="difficulty-title">Select Difficulty</h2>
+            <div class="difficulty-buttons">
+                <button class="difficulty-button" onclick="selectDifficulty('Easy')">Easy</button>
+                <button class="difficulty-button" onclick="selectDifficulty('Medium')">Medium</button>
+                <button class="difficulty-button" onclick="selectDifficulty('Hard')">Hard</button>
+            </div>
+        </div>
+    </div>
+    <!-- Game Page -->
+    <div id="game-page" class="page">
+        <div class="game-container">
+            <div class="game-header">
+                <div class="game-title-small">SNAKE ALPHABET</div>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Score</div>
+                        <div class="stat-value" id="score">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">High Score</div>
+                        <div class="stat-value" id="high-score">0</div>
+                    </div>
+                </div>
+                <div class="game-controls">
+                    <button class="control-btn" id="home-btn" title="Home" onclick="goToHome()">
+                        <i class="fas fa-home"></i>
+                    </button>
+                    <button class="control-btn" id="restart-btn" title="Restart" onclick="restartGame()">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button class="control-btn" id="pause-btn" title="Pause" onclick="togglePause()">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="game-info">
+                <div class="player-info">
+                    <div class="info-label">Player</div>
+                    <div class="info-value player-name" id="player-name-display">Player</div>
+                </div>
+                <div class="next-letter">
+                    <div class="info-label">Next Letter</div>
+                    <div class="letter-display">
+                        <div class="next-letter-value" id="next-letter">A</div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-board-container">
+                <div class="difficulty-indicator" id="difficulty-indicator">Medium</div>
+                <div class="game-board" id="game-board"></div>
+            </div>
+            <div class="keyboard-container">
+                <div class="keyboard" id="keyboard"></div>
+            </div>
+        </div>
+        <div class="game-message" id="game-message">
+            <div class="message-title" id="message-title">Game Over</div>
+            <div class="message-text" id="message-text">Your score: 0</div>
+            <button class="message-button" id="message-button" onclick="restartGame()">Play Again</button>
+        </div>
+        
+        <!-- Mobile Controls - REMOVED ARROW BUTTONS -->
+        <div class="mobile-controls">
+            <!-- Arrow buttons removed -->
+        </div>
+    </div>
+    <!-- Game Over Page -->
+    <div id="gameover-page" class="page">
+        <div class="gameover-container">
+            <h2 class="gameover-title">Game Over!</h2>
+            <div class="score-display">Your Score: <span id="final-score">0</span></div>
+            
+            <div class="leaderboard-container">
+                <h3 class="leaderboard-title">Leaderboard</h3>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="score-table">
+                        <!-- Scores will be inserted here -->
+                    </tbody>
+                </table>
+                <button class="clear-button" onclick="clearData()">
+                    <i class="fas fa-trash"></i> Clear Data
+                </button>
+            </div>
+            
+            <div class="gameover-controls">
+                <button class="gameover-button" onclick="goToHome()">
+                    <i class="fas fa-home"></i> Home
+                </button>
+                <button class="gameover-button" onclick="playAgain()">
+                    <i class="fas fa-redo"></i> Play Again
+                </button>
+            </div>
+        </div>
+    </div>
+    <audio id="gameover-audio" src="sounds/gameover.mp3"></audio>
+    <script>
+        // Game configuration
+        const BOARD_SIZE = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--board-size'));
+        const CELL_SIZE = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell-size'));
+        
+        // Game state
+        let snake = [{ x: Math.floor(BOARD_SIZE / 2), y: Math.floor(BOARD_SIZE / 2) }];
+        let direction = { x: 1, y: 0 };
+        let food = generateFood();
+        let foodLetter = getRandomLetter();
+        let nextFoodLetter = getRandomLetter();
+        let score = 0;
+        let highScore = localStorage.getItem('snakeHighScore') || 0;
+        let gameSpeed = 150;
+        let gameInterval;
+        let isPaused = false;
+        let isGameOver = false;
+        let movingToFood = false;
+        let playerName = '';
+        let difficulty = 'Medium';
+        
+        // DOM elements
+        const gameBoard = document.getElementById('game-board');
+        const scoreDisplay = document.getElementById('score');
+        const highScoreDisplay = document.getElementById('high-score');
+        const nextLetterDisplay = document.getElementById('next-letter');
+        const playerNameDisplay = document.getElementById('player-name-display');
+        const keyboard = document.getElementById('keyboard');
+        const gameMessage = document.getElementById('game-message');
+        const messageTitle = document.getElementById('message-title');
+        const messageText = document.getElementById('message-text');
+        const messageButton = document.getElementById('message-button');
+        const difficultyIndicator = document.getElementById('difficulty-indicator');
+        const pauseBtn = document.getElementById('pause-btn');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const scoreTable = document.getElementById('score-table');
+        const gameoverAudio = document.getElementById('gameover-audio');
+        
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Initialize page-specific functionality
+            if (pageId === 'game-page') {
+                initGame();
+            } else if (pageId === 'gameover-page') {
+                updateScoreboard();
+                gameoverAudio.play().catch(e => console.log("Audio play failed:", e));
+            }
+        }
+        
+        // Start game from index page
+        function startGame() {
+            const nameInput = document.getElementById('player-name');
+            playerName = nameInput.value.trim();
+            
+            if (!playerName) {
+                alert('Please enter your name!');
+                return;
+            }
+            
+            localStorage.setItem('playerName', playerName);
+            localStorage.setItem('currentScore', '0');
+            showPage('difficulty-page');
+        }
+        
+        // Select difficulty
+        function selectDifficulty(level) {
+            difficulty = level;
+            localStorage.setItem('difficulty', level);
+            showPage('game-page');
+        }
+        
+        // Go to home page
+        function goToHome() {
+            showPage('index-page');
+        }
+        
+        // Play again
+        function playAgain() {
+            showPage('difficulty-page');
+        }
+        
+        // Initialize game
+        function initGame() {
+            // Set player name
+            playerName = localStorage.getItem('playerName') || 'Player';
+            playerNameDisplay.textContent = playerName;
+            
+            // Set high score
+            highScoreDisplay.textContent = highScore;
+            
+            // Set difficulty
+            difficulty = localStorage.getItem('difficulty') || 'Medium';
+            
+            // Set game speed based on difficulty
+            switch (difficulty) {
+                case 'Easy':
+                    gameSpeed = 400;
+                    difficultyIndicator.textContent = 'Easy';
+                    difficultyIndicator.className = 'difficulty-indicator difficulty-easy';
+                    break;
+                case 'Medium':
+                    gameSpeed = 350;
+                    difficultyIndicator.textContent = 'Medium';
+                    difficultyIndicator.className = 'difficulty-indicator difficulty-medium';
+                    break;
+                case 'Hard':
+                    gameSpeed = 200;
+                    difficultyIndicator.textContent = 'Hard';
+                    difficultyIndicator.className = 'difficulty-indicator difficulty-hard';
+                    break;
+            }
+            
+            // Reset game state
+            resetGameState();
+            
+            // Create game board
+            createBoard();
+            
+            // Create keyboard
+            createKeyboard();
+            
+            // Render initial game state
+            render();
+            
+            // Start game loop
+            startGameLoop();
+            
+            // Add touch event listeners for swipe controls
+            setupTouchControls();
+        }
+        
+        // Reset game state
+        function resetGameState() {
+            snake = [{ x: Math.floor(BOARD_SIZE / 2), y: Math.floor(BOARD_SIZE / 2) }];
+            direction = { x: 1, y: 0 };
+            food = generateFood();
+            foodLetter = getRandomLetter();
+            nextFoodLetter = getRandomLetter();
+            score = 0;
+            isPaused = false;
+            isGameOver = false;
+            movingToFood = false;
+            
+            // Update UI
+            scoreDisplay.textContent = score;
+            nextLetterDisplay.textContent = nextFoodLetter;
+            pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            pauseBtn.title = 'Pause';
+            gameMessage.style.display = 'none';
+        }
+        
+        // Create game board cells
+        function createBoard() {
+            gameBoard.innerHTML = '';
+            for (let i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                gameBoard.appendChild(cell);
+            }
+        }
+        
+        // Create keyboard
+        function createKeyboard() {
+            keyboard.innerHTML = '';
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            
+            alphabet.split('').forEach(letter => {
+                const key = document.createElement('div');
+                key.classList.add('key');
+                key.textContent = letter;
+                key.addEventListener('click', () => handleKeyPress(letter));
+                keyboard.appendChild(key);
+            });
+        }
+        
+        // Handle key press
+        function handleKeyPress(letter) {
+            if (isGameOver || isPaused) return;
+            
+            if (letter === foodLetter) {
+                // Correct letter - move to food
+                movingToFood = true;
+                
+                // Visual feedback
+                const keys = document.querySelectorAll('.key');
+                keys.forEach(key => {
+                    if (key.textContent === letter) {
+                        key.classList.add('correct');
+                        setTimeout(() => key.classList.remove('correct'), 500);
+                    }
+                });
+                
+                // Play sound (if available)
+                playSound('correct');
+            } else {
+                // Wrong letter - stop moving to food
+                movingToFood = false;
+                
+                // Play sound (if available)
+                playSound('wrong');
+            }
+        }
+        
+        // Setup touch controls for swipe gestures
+        function setupTouchControls() {
+            let touchStartX = 0;
+            let touchStartY = 0;
+            
+            gameBoard.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            gameBoard.addEventListener('touchend', (e) => {
+                if (isGameOver || isPaused || movingToFood) return;
+                
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+                
+                const dx = touchEndX - touchStartX;
+                const dy = touchEndY - touchStartY;
+                
+                // Determine swipe direction
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    // Horizontal swipe
+                    if (dx > 0 && direction.x === 0) {
+                        // Right swipe
+                        direction = { x: 1, y: 0 };
+                    } else if (dx < 0 && direction.x === 0) {
+                        // Left swipe
+                        direction = { x: -1, y: 0 };
+                    }
+                } else {
+                    // Vertical swipe
+                    if (dy > 0 && direction.y === 0) {
+                        // Down swipe
+                        direction = { x: 0, y: 1 };
+                    } else if (dy < 0 && direction.y === 0) {
+                        // Up swipe
+                        direction = { x: 0, y: -1 };
+                    }
+                }
+            }, { passive: true });
+        }
+        
+        // Generate random food position
+        function generateFood() {
+            let newFood;
+            
+            // Make sure food doesn't appear on snake
+            do {
+                newFood = {
+                    x: Math.floor(Math.random() * BOARD_SIZE),
+                    y: Math.floor(Math.random() * BOARD_SIZE)
+                };
+            } while (snake.some(segment => segment.x === newFood.x && segment.y === newFood.y));
+            
+            return newFood;
+        }
+        
+        // Get random letter
+        function getRandomLetter() {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            return alphabet[Math.floor(Math.random() * alphabet.length)];
+        }
+        
+        // Start game loop
+        function startGameLoop() {
+            if (gameInterval) clearInterval(gameInterval);
+            gameInterval = setInterval(gameUpdate, gameSpeed);
+        }
+        
+        // Main game update function
+        function gameUpdate() {
+            if (isPaused || isGameOver) return;
+            
+            moveSnake();
+            render();
+        }
+        
+        // Move snake
+        function moveSnake() {
+            if (movingToFood) {
+                // Auto-move to food
+                autoMoveToFood();
+            } else {
+                // Normal movement
+                const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+                
+                // Check collision with walls
+                if (head.x < 0 || head.x >= BOARD_SIZE || head.y < 0 || head.y >= BOARD_SIZE) {
+                    gameOver();
+                    return;
+                }
+                
+                // Check collision with self
+                if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                    gameOver();
+                    return;
+                }
+                
+                // Add new head
+                snake.unshift(head);
+                
+                // Check if food is eaten
+                if (head.x === food.x && head.y === food.y) {
+                    eatFood();
+                } else {
+                    // Remove tail if no food eaten
+                    snake.pop();
+                }
+            }
+        }
+        
+        // Auto-move to food
+        function autoMoveToFood() {
+            const head = snake[0];
+            
+            // Calculate direction to food
+            if (head.x !== food.x) {
+                direction = { x: food.x > head.x ? 1 : -1, y: 0 };
+            } else if (head.y !== food.y) {
+                direction = { x: 0, y: food.y > head.y ? 1 : -1 };
+            }
+            
+            // Move snake
+            const newHead = { x: head.x + direction.x, y: head.y + direction.y };
+            
+            // Check collision with walls
+            if (newHead.x < 0 || newHead.x >= BOARD_SIZE || newHead.y < 0 || newHead.y >= BOARD_SIZE) {
+                gameOver();
+                return;
+            }
+            
+            // Check collision with self
+            if (snake.some(segment => segment.x === newHead.x && segment.y === newHead.y)) {
+                gameOver();
+                return;
+            }
+            
+            // Add new head
+            snake.unshift(newHead);
+            
+            // Check if food is eaten
+            if (newHead.x === food.x && newHead.y === food.y) {
+                eatFood();
+                movingToFood = false;
+            } else {
+                // Remove tail if no food eaten
+                snake.pop();
+            }
+        }
+        
+        // Eat food
+        function eatFood() {
+            // Increase score
+            score++;
+            scoreDisplay.textContent = score;
+            
+            // Update high score if needed
+            if (score > highScore) {
+                highScore = score;
+                highScoreDisplay.textContent = highScore;
+                localStorage.setItem('snakeHighScore', highScore);
+            }
+            
+            // Play sound (if available)
+            playSound('eat');
+            
+            // Generate new food
+            food = generateFood();
+            foodLetter = nextFoodLetter;
+            nextFoodLetter = getRandomLetter();
+            nextLetterDisplay.textContent = nextFoodLetter;
+        }
+        
+        // Render game
+        function render() {
+            // Clear all cells
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.className = 'cell';
+                cell.textContent = '';
+            });
+            
+            // Render snake
+            snake.forEach((segment, index) => {
+                const cellIndex = segment.y * BOARD_SIZE + segment.x;
+                const cell = document.querySelectorAll('.cell')[cellIndex];
+                
+                if (index === 0) {
+                    // Snake head
+                    cell.classList.add('snake-head');
+                    
+                    // Add direction class for eyes
+                    if (direction.x === 1) cell.classList.add('right');
+                    else if (direction.x === -1) cell.classList.add('left');
+                    else if (direction.y === -1) cell.classList.add('up');
+                    else if (direction.y === 1) cell.classList.add('down');
+                } else if (index === snake.length - 1) {
+                    // Snake tail
+                    cell.classList.add('snake-tail');
+                } else {
+                    // Snake body
+                    cell.classList.add('snake-body');
+                }
+            });
+            
+            // Render food
+            const foodIndex = food.y * BOARD_SIZE + food.x;
+            const foodCell = document.querySelectorAll('.cell')[foodIndex];
+            foodCell.classList.add('food');
+            foodCell.textContent = foodLetter;
+        }
+        
+        // Game over
+        function gameOver() {
+            isGameOver = true;
+            clearInterval(gameInterval);
+            
+            // Play sound (if available)
+            playSound('gameover');
+            
+            // Save score
+            localStorage.setItem('currentScore', score);
+            
+            // Show game over page
+            showPage('gameover-page');
+        }
+        
+        // Toggle pause
+        function togglePause() {
+            if (isGameOver) return;
+            
+            isPaused = !isPaused;
+            
+            if (isPaused) {
+                pauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                pauseBtn.title = 'Resume';
+                
+                // Show pause message
+                messageTitle.textContent = 'Game Paused';
+                messageText.textContent = 'Press Resume to continue playing';
+                gameMessage.style.display = 'flex';
+            } else {
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                pauseBtn.title = 'Pause';
+                
+                // Hide pause message
+                gameMessage.style.display = 'none';
+            }
+        }
+        
+        // Restart game
+        function restartGame() {
+            resetGameState();
+            render();
+            startGameLoop();
+        }
+        
+        // Update scoreboard
+        function updateScoreboard() {
+            let scores = JSON.parse(localStorage.getItem("gameScores")) || [];
+            let finalScore = parseInt(localStorage.getItem("currentScore")) || 0;
+            
+            // Update final score display
+            finalScoreDisplay.textContent = finalScore;
+            
+            if (finalScore > 0) {
+                let existingPlayer = scores.find(score => score.player === playerName);
+                if (existingPlayer) {
+                    // Update score only if the new one is higher
+                    if (finalScore > existingPlayer.score) {
+                        existingPlayer.score = finalScore;
+                    }
+                } else {
+                    scores.push({ player: playerName, score: finalScore });
+                }
+                localStorage.setItem("gameScores", JSON.stringify(scores));
+            }
+            
+            // Clear table
+            scoreTable.innerHTML = "";
+            
+            // Sort scores
+            scores.sort((a, b) => b.score - a.score);
+            
+            // Add top 5 scores to table
+            scores.slice(0, 5).forEach(game => {
+                let row = `<tr><td>${game.player}</td><td>${game.score}</td></tr>`;
+                scoreTable.innerHTML += row;
+            });
+        }
+        
+        // Clear data
+        function clearData() {
+            localStorage.removeItem("gameScores");
+            localStorage.removeItem("currentScore");
+            localStorage.removeItem("playerName");
+            localStorage.removeItem("snakeHighScore");
+            alert("Data cleared! Reloading...");
+            location.reload();
+        }
+        
+        // Play sound (placeholder function)
+        function playSound(type) {
+            // In a real implementation, you would play actual sound files
+            console.log(`Playing sound: ${type}`);
+        }
+        
+        // Set up keyboard event listeners
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('game-page').classList.contains('active')) {
+                if (isGameOver || isPaused) return;
+                
+                const key = e.key.toUpperCase();
+                if (/^[A-Z]$/.test(key)) {
+                    handleKeyPress(key);
+                } else if (e.key === ' ') {
+                    togglePause();
+                } else if (e.key === 'ArrowUp' && direction.y === 0) {
+                    direction = { x: 0, y: -1 };
+                } else if (e.key === 'ArrowDown' && direction.y === 0) {
+                    direction = { x: 0, y: 1 };
+                } else if (e.key === 'ArrowLeft' && direction.x === 0) {
+                    direction = { x: -1, y: 0 };
+                } else if (e.key === 'ArrowRight' && direction.x === 0) {
+                    direction = { x: 1, y: 0 };
+                }
+            }
+        });
+        
+        // Initialize the app
+        window.addEventListener('load', () => {
+            // Set up any initial state
+            const savedPlayerName = localStorage.getItem('playerName');
+            if (savedPlayerName) {
+                document.getElementById('player-name').value = savedPlayerName;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="10002" id="com.ejsgroup.app" version="1.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Kids Master</name>
-    <description> Kids App</description>
+<widget id="com.example.myapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <feature name="CDVOrientation">
+        <param name="android-package" value="cordova.plugins.screenorientation.CDVOrientation" />
+    </feature>
+    <name>MyApp</name>
+    <description>Fun Kids Game</description>
     <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
         Apache Cordova Team
     </author>
     <content src="index.html" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-    <icon src="www/res/kids-zoner-modified_imresizer.png" />
-    <allow-intent href="market:*" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="Orientation" value="default" />
-    <preference name="Fullscreen" value="true" />
 </widget>

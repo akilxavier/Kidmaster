@@ -2,227 +2,482 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alphabet Sound Game</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
   <style>
+    :root {
+      --bg-light: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
+      --bg-dark: #1a1a2e;
+      --section-light: rgba(255, 255, 255, 0.85);
+      --section-dark: #16213e;
+      --card-light: #4fc3f7;
+      --card-dark: #29b6f6;
+      --hover-bg: #03a9f4;
+      --text-light: #333;
+      --text-dark: #f3f3f3;
+      --accent: #0277bd;
+      --primary: #4fc3f7;
+      --secondary: #4ecdc4;
+      --tertiary: #ffd166;
+    }
+    
     body {
-      margin: 0;
-      padding: 2rem;
       font-family: 'Fredoka', sans-serif;
-      background: linear-gradient(to right, #e1f5fe, #b3e5fc);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: background 0.5s ease, color 0.5s ease;
+      min-height: 100vh;
+    }
+    
+    body.dark-mode {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    
+    .header-custom {
+      background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+      backdrop-filter: blur(10px);
+      padding-top: 100px;
       text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border-bottom: 3px solid var(--accent);
     }
-
-    h1 {
-      font-size: 2.5rem;
-      color: #0277bd;
-      margin-bottom: 2rem;
+    
+    body.dark-mode .header-custom {
+      background: linear-gradient(90deg, rgba(30,30,40,0.9) 0%, rgba(30,30,40,0.7) 100%);
     }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-      gap: 15px;
-      max-width: 600px;
+    
+    .title-custom {
+      font-size: 3rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, var(--accent), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .back-button {
+      position: fixed;
+      top: 1.5rem;
+      left: 1.5rem;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      font-size: 1.2rem;
+      z-index: 101;
+    }
+    
+    .back-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      color: white;
+    }
+    
+    .theme-button {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      border: none;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      font-size: 1.2rem;
+    }
+    
+    .theme-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      color: white;
+    }
+    
+    .section-custom {
+      background: var(--section-light);
+      border-radius: 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body.dark-mode .section-custom {
+      background: var(--section-dark);
+    }
+    
+    .section-custom::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      margin-bottom: 2rem;
+      height: 8px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--tertiary));
     }
-
+    
     .letter {
-      background: #fff;
-      color: #0277bd;
+      background: linear-gradient(145deg, var(--card-light), var(--primary));
+      color: white;
       font-size: 1.8rem;
       font-weight: bold;
-      border-radius: 12px;
+      border-radius: 15px;
       padding: 1rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.4s ease;
       user-select: none;
-    }
-
-    .letter:hover {
-      background: #81d4fa;
-      transform: translateY(-3px);
-    }
-
-    .image-container {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      transition: opacity 0.5s ease;
-      margin-top: 1rem;
-    }
-
-    .image-container.show {
       display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
     }
-
-    .image-container img {
-      width: 150px;
-      height: 150px;
-      /* object-fit: contain; */
-      border-radius: 12px;
-      margin-bottom: 0.5rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    
+    body.dark-mode .letter {
+      background: linear-gradient(145deg, var(--card-dark), var(--primary));
     }
-
-    .word {
-      font-size: 1.5rem;
-      color: #01579b;
+    
+    .letter::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+      z-index: 1;
     }
-
-    @media (max-width: 480px) {
-      h1 {
+    
+    .letter:hover {
+      background: linear-gradient(145deg, var(--hover-bg), var(--primary));
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      animation: bounce 0.6s ease;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(-5px) scale(1.05); }
+      50% { transform: translateY(-10px) scale(1.07); }
+    }
+    
+    .letter span {
+      position: relative;
+      z-index: 2;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+    
+    .modal-custom .modal-content {
+      background: linear-gradient(145deg, var(--section-light), #ffffff);
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      animation: popIn 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body.dark-mode .modal-custom .modal-content {
+      background: linear-gradient(145deg, var(--section-dark), #2a2a3e);
+    }
+    
+    .modal-custom .modal-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--tertiary));
+    }
+    
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .modal-custom img {
+      width: 180px;
+      height: 180px;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      border: 5px solid white;
+      object-fit: cover;
+    }
+    
+    .modal-word {
+      font-size: 2rem;
+      color: var(--accent);
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .particle {
+      position: absolute;
+      background: rgb(255, 0, 0);
+      border-radius: 50%;
+      animation: float-up 15s infinite linear;
+    }
+    
+    @keyframes float-up {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.4;
+      }
+      90% {
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1.5);
+        opacity: 0;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .title-custom {
         font-size: 2rem;
       }
-
+      
       .letter {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         padding: 0.8rem;
       }
-
-      .image-container img {
+      
+      .modal-custom img {
+        width: 150px;
+        height: 150px;
+      }
+      
+      .modal-word {
+        font-size: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .title-custom {
+        font-size: 1.8rem;
+      }
+      
+      .section-custom {
+        padding: 1.8rem;
+      }
+      
+      .letter {
+        font-size: 1.3rem;
+        padding: 0.7rem;
+      }
+      
+      .modal-custom img {
         width: 120px;
         height: 120px;
       }
-
-      .word {
-        font-size: 1.2rem;
+      
+      .modal-word {
+        font-size: 1.3rem;
       }
     }
-    .back-button {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      text-decoration: none;
-      color: #0277bd;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-    }
-
-    .popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.popup-content {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  text-align: center;
-  animation: fadeIn 0.3s ease;
-}
-
-.popup-content img {
-  width: 160px;
-  height: 160px;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-}
-
-.popup-word {
-  font-size: 1.5rem;
-  color: #0277bd;
-  font-weight: bold;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
   </style>
 </head>
 <body>
-  <a href="index.html" class="back-button"><img src="images/previous.png" height="40px" width="40px" alt=""></a>
-
-  <h1>Alphabet Sound Game</h1>
-
-  <div class="grid" id="letterGrid"></div>
-
-  <div id="popupOverlay" class="popup-overlay">
-  <div class="popup-content">
-    <img id="popupImage" src="" alt="Object Image" />
-    <div id="popupWord" class="popup-word"></div>
+  <!-- Floating particles background -->
+  <div class="particles" id="particles"></div>
+  
+  <a href="index.html" class="back-button text-decoration-none">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+  
+  <header class="header-custom py-4">
+    <div class="container">
+      <h1 class="title-custom mb-4">Alphabet Sound Game</h1>
+      <div class="d-flex justify-content-center align-items-center gap-3">
+        <button id="themeToggle" class="theme-button">
+          <i class="fas fa-sun"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  
+  <main class="container my-4">
+    <div class="section-custom">
+      <div class="row g-3" id="letterGrid"></div>
+    </div>
+  </main>
+  
+  <!-- Modal -->
+  <div class="modal fade modal-custom" id="letterModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <img id="modalImage" src="" alt="Object Image" class="img-fluid" />
+          <div id="modalWord" class="modal-word"></div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-
-
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const alphabetData = {
-      A: { sound: 'sounds/A.mp3', image: 'images/apple.png', word: 'Apple' },
-      B: { sound: 'sounds/B.mp3', image: 'images/ball.png', word: 'Ball' },
-      C: { sound: 'sounds/C.mp3', image: 'images/cat.png', word: 'Cat' },
-      D: { sound: 'sounds/D.mp3', image: 'images/dog.png', word: 'Dog' },
-      E: { sound: 'sounds/E.mp3', image: 'images/elephant.jpeg', word: 'Elephant' },
-      F: { sound: 'sounds/F.mp3', image: 'images/fish.png', word: 'Fish' },
-      G: { sound: 'sounds/G.mp3', image: 'images/goat.jpg', word: 'Goat' },
-      H: { sound: 'sounds/H.mp3', image: 'images/hat.jpg', word: 'Hat' },
-      I: { sound: 'sounds/I.mp3', image: 'images/ice cream.jpg', word: 'Ice Cream' },
-      J: { sound: 'sounds/J.mp3', image: 'images/jug.jpg', word: 'Jug' },
-      K: { sound: 'sounds/K.mp3', image: 'images/kite.jpg', word: 'Kite' },
-      L: { sound: 'sounds/L.mp3', image: 'images/lion.png', word: 'Lion' },
-      M: { sound: 'sounds/M.mp3', image: 'images/monkey.jpeg', word: 'Monkey' },
-      N: { sound: 'sounds/N.mp3', image: 'images/nest.jpg', word: 'Nest' },
-      O: { sound: 'sounds/O.mp3', image: 'images/owl.png', word: 'Owl' },
-      P: { sound: 'sounds/P.mp3', image: 'images/parrot.png', word: 'Parrot' },
-      Q: { sound: 'sounds/Q.mp3', image: 'images/queen.png', word: 'Queen' },
-      R: { sound: 'sounds/R.mp3', image: 'images/rabbit.jpg', word: 'Rabbit' },
-      S: { sound: 'sounds/S.mp3', image: 'images/sun.jpg', word: 'Sun' },
-      T: { sound: 'sounds/T.mp3', image: 'images/tiger.PNG', word: 'Tiger' },
-      U: { sound: 'sounds/U.mp3', image: 'images/umbrella.jpg', word: 'Umbrella' },
-      V: { sound: 'sounds/V.mp3', image: 'images/van.png', word: 'Van' },
-      W: { sound: 'sounds/W.mp3', image: 'images/watch.png', word: 'Watch' },
-      X: { sound: 'sounds/X.mp3', image: 'images/xylophone.PNG', word: 'Xylophone' },
-      Y: { sound: 'sounds/Y.mp3', image: 'images/yak.PNG', word: 'Yak' },
-      Z: { sound: 'sounds/Z.mp3', image: 'images/zebra.PNG', word: 'Zebra' }
+      A: { sound: 'sounds/alphabet name/A.mp3', image: 'images/a-z/apple.png', word: 'Apple' },
+      B: { sound: 'sounds/alphabet name/B.mp3', image: 'images/a-z/ball.png', word: 'Ball' },
+      C: { sound: 'sounds/alphabet name/C.mp3', image: 'images/a-z/cat.png', word: 'Cat' },
+      D: { sound: 'sounds/alphabet name/D.mp3', image: 'images/a-z/dog.png', word: 'Dog' },
+      E: { sound: 'sounds/alphabet name/E.mp3', image: 'images/a-z/elephant.png', word: 'Elephant' },
+      F: { sound: 'sounds/alphabet name/F.mp3', image: 'images/a-z/fish.png', word: 'Fish' },
+      G: { sound: 'sounds/alphabet name/G.mp3', image: 'images/a-z/goat.png', word: 'Goat' },
+      H: { sound: 'sounds/alphabet name/H.mp3', image: 'images/a-z/hat.png', word: 'Hat' },
+      I: { sound: 'sounds/alphabet name/I.mp3', image: 'images/a-z/ice cream.png', word: 'Ice Cream' },
+      J: { sound: 'sounds/alphabet name/J.mp3', image: 'images/a-z/jug.png', word: 'Jug' },
+      K: { sound: 'sounds/alphabet name/K.mp3', image: 'images/a-z/kite.png', word: 'Kite' },
+      L: { sound: 'sounds/alphabet name/L.mp3', image: 'images/a-z/lion.png', word: 'Lion' },
+      M: { sound: 'sounds/alphabet name/M.mp3', image: 'images/a-z/monkey.png', word: 'Monkey' },
+      N: { sound: 'sounds/alphabet name/N.mp3', image: 'images/a-z/nest.png', word: 'Nest' },
+      O: { sound: 'sounds/alphabet name/O.mp3', image: 'images/a-z/owl.png', word: 'Owl' },
+      P: { sound: 'sounds/alphabet name/P.mp3', image: 'images/a-z/parrot.png', word: 'Parrot' },
+      Q: { sound: 'sounds/alphabet name/Q.mp3', image: 'images/a-z/queen.png', word: 'Queen' },
+      R: { sound: 'sounds/alphabet name/R.mp3', image: 'images/a-z/rabbit.png', word: 'Rabbit' },
+      S: { sound: 'sounds/alphabet name/S.mp3', image: 'images/a-z/sun.png', word: 'Sun' },
+      T: { sound: 'sounds/alphabet name/T.mp3', image: 'images/a-z/tiger.png', word: 'Tiger' },
+      U: { sound: 'sounds/alphabet name/U.mp3', image: 'images/a-z/umbrella.png', word: 'Umbrella' },
+      V: { sound: 'sounds/alphabet name/V.mp3', image: 'images/a-z/van.png', word: 'Van' },
+      W: { sound: 'sounds/alphabet name/W.mp3', image: 'images/a-z/watch.png', word: 'Watch' },
+      X: { sound: 'sounds/alphabet name/X.mp3', image: 'images/a-z/xylophone.png', word: 'Xylophone' },
+      Y: { sound: 'sounds/alphabet name/Y.mp3', image: 'images/a-z/yak.png', word: 'Yak' },
+      Z: { sound: 'sounds/alphabet name/Z.mp3', image: 'images/a-z/zebra.png', word: 'Zebra' }
     };
-
+    
     const letterGrid = document.getElementById('letterGrid');
-    const popupOverlay = document.getElementById('popupOverlay');
-    const popupImage = document.getElementById('popupImage');
-    const popupWord = document.getElementById('popupWord');
-
+    const letterModal = new bootstrap.Modal(document.getElementById('letterModal'));
+    const modalImage = document.getElementById('modalImage');
+    const modalWord = document.getElementById('modalWord');
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Create letter buttons
     Object.keys(alphabetData).forEach(letter => {
+      const col = document.createElement('div');
+      col.className = 'col-2 col-sm-1'; // Responsive columns
+      
       const btn = document.createElement('div');
       btn.className = 'letter';
-      btn.textContent = letter;
+      btn.innerHTML = `<span>${letter}</span>`;
       btn.onclick = () => {
-  const data = alphabetData[letter];
-
-  // Play sound
-  const audio = new Audio(data.sound);
-  audio.play().catch(e => console.error("Sound error:", e));
-
-  // Show popup
-  popupImage.src = data.image;
-  popupWord.textContent = data.word;
-  popupOverlay.style.display = 'flex';
-
-  // Hide popup after 2 seconds
-  setTimeout(() => {
-    popupOverlay.style.display = 'none';
-  }, 2000);
-};
-
-      letterGrid.appendChild(btn);
+        const data = alphabetData[letter];
+        // Play sound
+        const audio = new Audio(data.sound);
+        audio.play().catch(e => console.error("Sound error:", e));
+        // Show modal
+        modalImage.src = data.image;
+        modalWord.textContent = data.word;
+        letterModal.show();
+        // Hide modal after 2 seconds
+        setTimeout(() => {
+          letterModal.hide();
+        }, 2000);
+      };
+      
+      col.appendChild(btn);
+      letterGrid.appendChild(col);
     });
-     
+    
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDarkMode = document.body.classList.contains('dark-mode');
+      
+      // Update icon
+      if (isDarkMode) {
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+      } else {
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+      }
+      
+      // Save user preference
+      localStorage.setItem('darkMode', isDarkMode);
+    }
+    
+    // Add event listener to theme toggle button
+    themeToggle.addEventListener('click', toggleDarkMode);
+    
+    // Check for saved dark mode preference
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+      
+      if (savedDarkMode) {
+        document.body.classList.add('dark-mode');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+      }
+      
+      // Create floating particles
+      createParticles();
+    });
+    
+    // Create floating particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random size
+        const size = Math.random() * 10 + 5;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Random position
+        const posX = Math.random() * 100;
+        particle.style.left = `${posX}%`;
+        
+        // Random animation delay
+        const delay = Math.random() * 15;
+        particle.style.animationDelay = `${delay}s`;
+        
+        // Random opacity
+        const opacity = Math.random() * 0.5 + 0.1;
+        particle.style.opacity = opacity;
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
   </script>
 </body>
 </html>
